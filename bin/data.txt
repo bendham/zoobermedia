@@ -1,0 +1,5 @@
+lastupload,watchpeopledieinside
+contagiouslaughter,64
+watchpeopledieinside,49
+perfectlycutscreams,27
+thumbnail,{"contagiouslaughter":{"left":(10,320),"right":(980,320)},"watchpeopledieinside" : {"left" : (25,310),"right" : (1025,310)}, "perfectlycutscreams" : {"left" : (15,330), "right" : (1000,330)}}
