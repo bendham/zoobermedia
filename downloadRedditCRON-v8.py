@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-"""
-This updated removed uploading to any other subreddit other than contagious laughter and uses the new contagiousLaughterUploadCounter.txt
-Also, removed faces in the thumbnails
-Updated from: 'audio' to 'DASH_audio.mp4'
-
-"""
 """
 Created on Thu Oct 10 21:05:20 2019
 
