@@ -3,3 +3,4 @@ requests==2.22.0
 beautifulsoup4==4.6.3
 Pillow==6.1.0
 moviepy==1.0.0
+ffmpeg-normalize

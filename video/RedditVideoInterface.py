@@ -2,13 +2,13 @@ import praw
 from .Video import Video
 from .VideoHandler import VideoHandler
 import requests
-import json
+from bin.Paths import Paths
 
 
 class RedditVideoInterface:
 
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    MAX_VIDEOS = 5
+    MAX_VIDEOS = 2
 
     def __init__(self, subredditString):
 
@@ -17,23 +17,20 @@ class RedditVideoInterface:
         self.url = "https://www.reddit.com"
         self.vidUrlAppear = "v.redd.it"
         self.subredditString = subredditString
-        self.sub = self.setSub()
+        self.sub = self.setSub(subredditString)
 
         self.vidHandler = VideoHandler()
 
 
 
-    def setSub(self):
-       return self.redditInstance.subreddit(self.subredditString)
+    def setSub(self, subreddit):
+       return self.redditInstance.subreddit(subreddit)
 
 
     def generateVideoList(self):
-        
-
         self.populateList()
         self.removeUnusable()
-
-
+        self.processVideos()
 
     def populateList(self):
         vidNumber = 1
@@ -78,6 +75,8 @@ class RedditVideoInterface:
 
         self.vidHandler = usableVideoHandler
 
+    def processVideos(self):
+        self.vidHandler.processVideos()
 
             
 

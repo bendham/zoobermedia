@@ -5,6 +5,12 @@ class Video:
 
         self.vidNum = vidNum
 
+        self.videoName = f"video{vidNum}.mp4"
+        self.audioName = f"audio{vidNum}.mp3"
+        self.normalizedAudioName = f"normalized_audio{vidNum}.wav"
+
+        self.combinedName = f"video_and_audio{vidNum}.mp4"
+
     def setVideoAndAudioUrl(self, videoLink):
         self.setVideoUrl(videoLink)
         self.setAudioUrl(videoLink)
