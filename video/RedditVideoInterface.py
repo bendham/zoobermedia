@@ -31,6 +31,7 @@ class RedditVideoInterface:
         self.populateList()
         self.removeUnusable()
         self.processVideos()
+        self.getThumbnail()
 
     def populateList(self):
         vidNumber = 1
@@ -77,6 +78,9 @@ class RedditVideoInterface:
 
     def processVideos(self):
         self.vidHandler.processVideos()
+
+    def getThumbnail(self):
+        self.vidHandler.getThumbnail()
 
             
 

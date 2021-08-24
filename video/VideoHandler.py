@@ -1,10 +1,16 @@
 from logging import getLogRecordFactory
+import math
+
+from moviepy.video.VideoClip import VideoClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
 from video.Video import Video
 from bin.Paths import Paths
+from video.Thumbnail import Thumbnail
 import requests
 import os
-import moviepy
+from moviepy import *
 import subprocess
+import random
 
 class VideoHandler:
 
@@ -12,6 +18,7 @@ class VideoHandler:
     def __init__(self):
         self.vidArray = []
         self.paths = Paths()
+        self.thumbnail = Thumbnail()
 
     def addVid(self, video):
 
@@ -30,7 +37,7 @@ class VideoHandler:
             normAudioFileDir = os.path.join(audioDir, vid.normalizedAudioName)
 
             self.downloadVid(vid, vidFileDir, audioFileDir)
-            self.processVid(vid, vidFileDir, audioDir, audioFileDir, normAudioFileDir)
+            self.processVid(vid, vidFileDir, audioFileDir, normAudioFileDir)
             self.removeFile([vidFileDir, audioFileDir, normAudioFileDir])
 
     def downloadVid(self, vid, vidFileDir, audioFileDir):
@@ -44,9 +51,11 @@ class VideoHandler:
 
         #print(auddioReq.headers)
 
-    def processVid(self, vid, videoFileDir, audioDir, audioFileDir, normAudioFileDir):
+    def processVid(self, vid, videoFileDir, audioFileDir, normAudioFileDir):
         print(f"Processing video #{vid.vidNum}...\n")
         combinedFileDir = os.path.join(self.paths.clipDir, vid.combinedName)
+
+        self.checkCandidateForThumbnail(videoFileDir)
 
         # Normalize Audio
         subprocess.call(f'ffmpeg-normalize {audioFileDir} -o {normAudioFileDir}', shell=True)
@@ -62,5 +71,30 @@ class VideoHandler:
         return requests.get(url)
 
     def removeFile(self, fileDirArray):
-        for fileDir in fileDirArray:
-            os.remove(fileDir)
+        if(fileDirArray not in self.paths.thumbnailPathArray):
+            for fileDir in fileDirArray:
+                os.remove(fileDir)
+
+    def checkCandidateForThumbnail(self, vidFileDir):
+        numberOfThumbnails = len(self.thumbnail.thumbnailPathArray)
+
+        if(numberOfThumbnails < 2):
+            vid =  VideoFileClip(vidFileDir)
+            
+
+            if vid.h * vid.w > 720*1080:
+                self.thumbnail.thumbnailPathArray.append(vidFileDir)
+
+            intVidDuration = math.floor(vid.duration)
+            
+            lowEnd = math.floor(intVidDuration/4)
+            hiEnd = math.floor(intVidDuration*3/4)
+
+            thumbNailTime = random.randint(lowEnd, hiEnd)
+
+            thumbnailFilePath = os.path.join(self.paths.thumbnailSaveDir, f"thumbnailChoice{numberOfThumbnails+1}")
+
+            vid.save_frame(thumbnailFilePath, t=thumbNailTime)
+            self.thumbnail.addThumbnailPath(thumbnailFilePath)
+
+            vid.close()
