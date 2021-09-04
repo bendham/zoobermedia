@@ -79,7 +79,9 @@ class VideoHandler:
         numberOfThumbnails = len(self.thumbnail.thumbnailPathArray)
 
         if(numberOfThumbnails < 2):
-            vid =  VideoFileClip(vidFileDir)
+
+            with open(vidFileDir, "wb") as vid:
+                vid =  VideoFileClip(vidFileDir)
             
 
             if vid.h * vid.w > 720*1080:
