@@ -2,7 +2,6 @@ import praw
 from .Video import Video
 from .VideoHandler import VideoHandler
 import requests
-from bin.Paths import Paths
 
 
 class RedditVideoInterface:

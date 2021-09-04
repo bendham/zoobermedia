@@ -1,20 +1,15 @@
 import random
-from bin.Paths import Paths
 from PIL import Image, ImageDraw, ImageFont
 import os
 import json
 
+from settings import *
 
 class Thumbnail:
 
     def __init__(self):
         self.FONT = "FRAHV.TTF"
         self.SIZE = (1280,720)
-
-        self.paths = Paths()
-
-
-
         self.thumbnailPathArray = []
 
     def addThumbnailPath(self, possibleThumbnail):
@@ -29,15 +24,15 @@ class Thumbnail:
         
             
         if(withWord):
-            with open(self.paths.uploadInfoFileDir) as uploadInfo:
+            with open(UPLOAD_INFO_FILE_DIR) as uploadInfo:
                 currentVideoDetails = json.load(uploadInfo)['current-video']
 
-            wordDir = os.path.join(self.paths.thumbnailWords, currentVideoDetails['sub'])
+            wordDir = os.path.join(THUMBNAIL_WORDS_DIR, currentVideoDetails['sub'])
 
             wordDetails = {'path':self.pickPath(wordDir),'number':currentVideoDetails['number']}
 
         if(withFace):
-            faceChoice = self.pickPath(self.paths.thumbnailFaces, wordDetails)
+            faceChoice = self.pickPath(THUMBNAIL_FACES_DIR, wordDetails)
 
         
         for videoThumbnailDir in self.thumbnailPathArray:

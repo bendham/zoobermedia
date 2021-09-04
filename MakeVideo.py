@@ -1,13 +1,13 @@
 import json
-from bin.Paths import Paths
 from video.RedditVideoInterface import RedditVideoInterface
+
+from settings import *
 
 
 
 def updateVideoDeatils():
-    paths = Paths()
 
-    with open(paths.uploadInfoFileDir, 'r+') as vidFile:
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
         videoDetails = json.load(vidFile)
         videoDetails['current-video']['number'] = videoDetails['current-video']['number'] + 1
 

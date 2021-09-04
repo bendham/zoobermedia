@@ -4,7 +4,6 @@ import math
 from moviepy.video.VideoClip import VideoClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from video.Video import Video
-from bin.Paths import Paths
 from video.Thumbnail import Thumbnail
 import requests
 import os
@@ -12,12 +11,13 @@ from moviepy import *
 import subprocess
 import random
 
+from settings import *
+
 class VideoHandler:
 
 
     def __init__(self):
         self.vidArray = []
-        self.paths = Paths()
         self.thumbnail = Thumbnail()
 
     def addVid(self, video):
@@ -28,13 +28,11 @@ class VideoHandler:
         self.vidArray.remove(video)
 
     def processVideos(self):
-        videoDir = self.paths.clipVideoDir
-        audioDir = self.paths.clipAudioDir
-
+    
         for vid in self.vidArray:
-            vidFileDir =  os.path.join(videoDir , vid.videoName)
-            audioFileDir =  os.path.join(audioDir, vid.audioName)
-            normAudioFileDir = os.path.join(audioDir, vid.normalizedAudioName)
+            vidFileDir =  os.path.join(CLIP_VIDEO_DIR , vid.videoName)
+            audioFileDir =  os.path.join(CLIP_AUDIO_DIR, vid.audioName)
+            normAudioFileDir = os.path.join(CLIP_AUDIO_DIR, vid.normalizedAudioName)
 
             self.downloadVid(vid, vidFileDir, audioFileDir)
             self.processVid(vid, vidFileDir, audioFileDir, normAudioFileDir)
@@ -53,7 +51,7 @@ class VideoHandler:
 
     def processVid(self, vid, videoFileDir, audioFileDir, normAudioFileDir):
         print(f"Processing video #{vid.vidNum}...\n")
-        combinedFileDir = os.path.join(self.paths.clipDir, vid.combinedName)
+        combinedFileDir = os.path.join(CLIP_DIR, vid.combinedName)
 
         self.checkCandidateForThumbnail(videoFileDir)
 
@@ -61,7 +59,7 @@ class VideoHandler:
         subprocess.call(f'ffmpeg-normalize {audioFileDir} -o {normAudioFileDir}', shell=True)
 
         # Combine Video and Audio, and add a blurred background
-        subprocess.call(f'ffmpeg -i {videoFileDir} -i {normAudioFileDir} -i {self.paths.watermarkFileDir} -filter_complex "[0]scale=1280:720,setsar=1:1,boxblur=10[bg];[0]scale=-1:720,setsar=16:9[main];[bg][main]overlay=(W-w)/2:(H-h)/2[markit];[markit][2] overlay" {combinedFileDir}', shell=True)
+        subprocess.call(f'ffmpeg -i {videoFileDir} -i {normAudioFileDir} -i {WATERMARK_FILE_DIR} -filter_complex "[0]scale=1280:720,setsar=1:1,boxblur=10[bg];[0]scale=-1:720,setsar=16:9[main];[bg][main]overlay=(W-w)/2:(H-h)/2[markit];[markit][2] overlay" {combinedFileDir}', shell=True)
     
     def writeContentFromRequest(self, req, dir):
         with open(dir, "wb" ) as video:
@@ -71,7 +69,7 @@ class VideoHandler:
         return requests.get(url)
 
     def removeFile(self, fileDirArray):
-        if(fileDirArray not in self.paths.thumbnailPathArray):
+        if(fileDirArray not in self.thumbnail.thumbnailPathArray):
             for fileDir in fileDirArray:
                 os.remove(fileDir)
 
@@ -94,7 +92,7 @@ class VideoHandler:
 
             thumbNailTime = random.randint(lowEnd, hiEnd)
 
-            thumbnailFilePath = os.path.join(self.paths.thumbnailSaveDir, f"thumbnailChoice{numberOfThumbnails+1}")
+            thumbnailFilePath = os.path.join(THUMBNAIL_SAVE_DIR, f"thumbnailChoice{numberOfThumbnails+1}")
 
             vid.save_frame(thumbnailFilePath, t=thumbNailTime)
             self.thumbnail.addThumbnailPath(thumbnailFilePath)
