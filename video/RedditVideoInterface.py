@@ -79,7 +79,7 @@ class RedditVideoInterface:
         self.vidHandler.processVideos()
 
     def getThumbnail(self):
-        self.vidHandler.getThumbnail()
+        self.vidHandler.thumbnail.getFinalThumbs()
 
             
 

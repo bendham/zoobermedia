@@ -16,7 +16,7 @@ class Video:
         self.setAudioUrl(videoLink)
 
     def setVideoUrl(self, videoUrl):
-        self.videoUrl = videoUrl
+        self.videoUrl = videoUrl.split("?")[0]
 
     def setAudioUrl(self, videoLink):
 

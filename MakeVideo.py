@@ -3,8 +3,6 @@ from video.RedditVideoInterface import RedditVideoInterface
 
 from settings import *
 
-
-
 def updateVideoDeatils():
 
     with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
