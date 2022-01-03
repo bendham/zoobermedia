@@ -2,16 +2,17 @@ import praw
 from .Video import Video
 from .VideoHandler import VideoHandler
 import requests
+from .secrets import reddit_secret, reddit_id
 
 
 class RedditVideoInterface:
 
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    MAX_VIDEOS = 2
+    MAX_VIDEOS = 7
 
     def __init__(self, subredditString):
 
-        self.redditInstance = praw.Reddit(client_id='7EnZZe9pViFt7Q', client_secret='z7pn_Jsr0m1iagtaFyuCQpDoXtA', user_agent='my user agent')
+        self.redditInstance = praw.Reddit(client_id=reddit_id, client_secret=reddit_secret, user_agent='my user agent')
 
         self.url = "https://www.reddit.com"
         self.vidUrlAppear = "v.redd.it"
@@ -31,6 +32,7 @@ class RedditVideoInterface:
         self.removeUnusable()
         self.processVideos()
         self.getThumbnail()
+        self.concat()
 
     def populateList(self):
         vidNumber = 1
@@ -79,7 +81,14 @@ class RedditVideoInterface:
         self.vidHandler.processVideos()
 
     def getThumbnail(self):
-        self.vidHandler.thumbnail.getFinalThumbs()
+        self.vidHandler.thumbnail.getFinalThumbs(True, True)
+        self.vidHandler.thumbnail.cleanUpThumbnailVideos()
+
+    def concat(self):
+        self.vidHandler.concat()
+
+
+    
 
             
 

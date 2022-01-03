@@ -3,6 +3,7 @@ import math
 
 from moviepy.video.VideoClip import VideoClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.editor import concatenate_videoclips
 from video.Video import Video
 from video.Thumbnail import Thumbnail
 import requests
@@ -77,4 +78,26 @@ class VideoHandler:
             for fileDir in fileDirArray:
                 if(fileDir not in self.thumbnail.vidsForThumbnail):
                     os.remove(fileDir)
+
+    def concat(self):
+        vidList = list(map( lambda vid : os.path.join(CLIP_DIR ,vid), os.listdir(CLIP_DIR)[2:]))
+
+        moviePyVids = []
+    
+        for vidDir in vidList:
+            moviePyVids.append(VideoFileClip(vidDir))
+        
+        moviePyVids.append(VideoFileClip(ZOOBER_OUTRO))
+        
+        finClip = concatenate_videoclips(moviePyVids, method='compose')
+        finClip.write_videofile(FINAL_SAVE)
+        
+        # Close and get rid of last item (the outro)
+        moviePyVids[-1].reader.close()
+        moviePyVids = moviePyVids[:-1]
+
+        # Close and get rid of all videos
+        for idx, video in enumerate(moviePyVids):
+            video.reader.close()
+            os.remove(vidList[idx])
     

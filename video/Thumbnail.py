@@ -18,57 +18,95 @@ class Thumbnail:
         self.vidsForThumbnail = []
 
     def addThumbnailPath(self, possibleThumbnail):
-        self.thumbnailPathArray = self.thumbnailPathArray.append(possibleThumbnail)
+        self.thumbnailPathArray.append(possibleThumbnail)
+
+    def cleanUpThumbnailVideos(self):
+        for vidDir in self.vidsForThumbnail:
+            os.remove(vidDir)
 
     def generateThumbnails(self, withWord=True, withFace=True):
 
-        faceChoice = None                    
+        faceChoice = None    
+        wordDetails = None
+
         if(withWord):
             with open(UPLOAD_INFO_FILE_DIR) as uploadInfo:
                 currentVideoDetails = json.load(uploadInfo)['current-video']
 
             wordDir = os.path.join(THUMBNAIL_WORDS_DIR, currentVideoDetails['sub'])
 
-            wordDetails = {'path':self.pickPath(wordDir),'number':currentVideoDetails['number']}
+            wordDetails = {'choice':self.pickPath(wordDir),'number':currentVideoDetails['number']}
 
         if(withFace):
             faceChoice = self.pickPath(THUMBNAIL_FACES_DIR, wordDetails)
 
         
-        for videoThumbnailDir in self.thumbnailPathArray:
-            self.produceThumbnail(videoThumbnailDir, wordDetails, faceChoice)
+        for idx,videoThumbnailDir in enumerate(self.thumbnailPathArray):
+            self.produceThumbnail(videoThumbnailDir, idx+1,wordDetails, faceChoice)
 
             
 
-    def produceThumbnail(self,dir, wordDetails=None, faceDir=None):
+    def produceThumbnail(self, dir, numberThumb, wordDetails=None, faceDir=None):
 
-        # if(wordDetails):
-        #     wordImage = Image.open(wordDetails['path'])
-    
-        # baseImg = Image.open(dir)
-        # baseImg = baseImg.resize(self.SIZE,Image.ANTIALIAS)
+        thumbSaveDirec = os.path.join(THUMBNAIL_SAVE_DIR,f"funnyMoments{numberThumb}.png")
+
+        baseImg = Image.open(dir)
+        baseImg = baseImg.resize(self.SIZE,Image.ANTIALIAS)
+
+        if(faceDir):
+            faceImage = Image.open(faceDir)
+            baseImg.paste(faceImage,(0,0), faceImage)
+
+        if(wordDetails):
+
+            fontDir = ImageFont.truetype(os.path.join(THUMBNAIL_DIR, self.FONT), 130)
+            b = 5
+            x = 980
+            y = 320
+
+            wordImage = Image.open(wordDetails['choice'])
+
+            baseImg.paste(wordImage,(0,0), wordImage)
+
+            # Make number
+
+            if "left" in wordDetails['choice']:
+                x = 10
+                y = 320
+
+            numWord = "#{}".format(wordDetails['number'])
+
+            d = ImageDraw.Draw(baseImg)
+
+            d.text((x-b,y-b), numWord, fill="black",font=fontDir)
+            d.text((x+b,y+b), numWord, fill="black",font=fontDir)
+            d.text((x-b,y+b), numWord, fill="black",font=fontDir)
+            d.text((x+b,y-b), numWord, fill="black",font=fontDir)
+
+            d.text((x,y), numWord, fill="white",font=fontDir)
+
+        baseImg.save(thumbSaveDirec)
+
+        os.remove(dir)
 
 
-        return
 
-
-    
     def pickPath(self, path, wordDetails=None):
        
         if(wordDetails):
             side = 'left'
-            if('right' in wordDetails['path']):
+            if('right' in wordDetails['choice']):
                 side = 'right'
 
-            files = os.listdir()
+            files = os.listdir(path)
             chosenFile =  random.choice(files)
-            while(side not in chosenFile):
+            while(side in chosenFile):
                 chosenFile =  random.choice(files)
 
 
-            return chosenFile
+            return os.path.join(path, chosenFile)
         else:
-            return random.choice(os.listdir(path)) 
+            return os.path.join(path,random.choice(os.listdir(path)))
 
     def checkCandidateForThumbnail(self, vidFileDir):
         numberOfThumbnails = len(self.thumbnailPathArray)
