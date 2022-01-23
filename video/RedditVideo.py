@@ -1,4 +1,6 @@
-class Video:
+import os
+from settings import *
+class RedditVideo:
     def __init__(self, postUrl, vidNum):
         self.postUrl = postUrl
         self.jsonPostUrl = postUrl[:-1] + ".json"
@@ -10,6 +12,11 @@ class Video:
         self.normalizedAudioName = f"normalized_audio{vidNum}.wav"
 
         self.combinedName = f"video_and_audio{vidNum}.mp4"
+
+        self.videoFileDir =  os.path.join(CLIP_VIDEO_DIR , self.videoName)
+        self.audioFileDir =  os.path.join(CLIP_AUDIO_DIR, self.audioName)
+        self.normAudioFileDir = os.path.join(CLIP_AUDIO_DIR, self.normalizedAudioName)
+        self.combinedFileDir = os.path.join(CLIP_DIR, self.combinedName)
 
     def setVideoAndAudioUrl(self, videoLink):
         self.setVideoUrl(videoLink)

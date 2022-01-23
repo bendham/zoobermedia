@@ -1,14 +1,16 @@
 import praw
-from .Video import Video
+from .RedditVideo import RedditVideo
 from .VideoHandler import VideoHandler
 import requests
 from .secrets import reddit_secret, reddit_id
+from settings import *
+import subprocess
 
 
 class RedditVideoInterface:
 
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    MAX_VIDEOS = 7
+    MAX_VIDEOS = 3
 
     def __init__(self, subredditString):
 
@@ -43,7 +45,7 @@ class RedditVideoInterface:
                 
                 directLink = self.url + submission.permalink
 
-                newVideo = Video(directLink, vidNumber)
+                newVideo = RedditVideo(directLink, vidNumber)
                 self.vidHandler.addVid(newVideo)
 
 
@@ -78,11 +80,43 @@ class RedditVideoInterface:
         self.vidHandler = usableVideoHandler
 
     def processVideos(self):
-        self.vidHandler.processVideos()
+    
+        for vid in self.vidHandler.vidArray:
+
+            self.downloadVid(vid)
+            self.processVidAndRemove(vid)            
+
+    def downloadVid(self, vid):
+        print(f"Downloading video #{vid.vidNum}...\n")
+        
+        videoReq = self.vidHandler.urlRequest(vid.videoUrl)
+        self.vidHandler.writeContentFromRequest(videoReq, vid.videoFileDir)
+
+        auddioReq = self.vidHandler.urlRequest(vid.audioUrl)
+        self.vidHandler.writeContentFromRequest(auddioReq, vid.audioFileDir)
+
+        #print(videoReq.headers)
+
+    def processVidAndRemove(self, vid):
+        print(f"Processing video #{vid.vidNum}...\n")
+
+        sizeVideo = os.stat(vid.videoFileDir).st_size
+        if(sizeVideo > 1000):
+            self.vidHandler.thumbnail.checkCandidateForThumbnail(vid.videoFileDir)
+
+            # Normalize Audio
+            subprocess.call(f'ffmpeg-normalize {vid.audioFileDir} -o {vid.normAudioFileDir}', shell=True)
+
+            # Combine Video and Audio, and add a blurred background
+            subprocess.call(f'ffmpeg -i {vid.videoFileDir} -i {vid.normAudioFileDir} -i {WATERMARK_FILE_DIR} -filter_complex "[0]scale=1280:720,setsar=1:1,boxblur=10[bg];[0]scale=-1:720,setsar=16:9[main];[bg][main]overlay=(W-w)/2:(H-h)/2[markit];[markit][2] overlay" {vid.combinedFileDir}', shell=True)
+
+            self.vidHandler.removeFile([vid.videoFileDir, vid.audioFileDir, vid.normAudioFileDir])
+        else:
+            self.vidHandler.removeFile([vid.videoFileDir, vid.audioFileDir])
+            print(f"Video #{vid.vidNum} was too small...")
 
     def getThumbnail(self):
-        self.vidHandler.thumbnail.getFinalThumbs(True, True)
-        self.vidHandler.thumbnail.cleanUpThumbnailVideos()
+        self.vidHandler.getThumbnail(True, True)
 
     def concat(self):
         self.vidHandler.concat()

@@ -1,5 +1,6 @@
 import json
 from video.RedditVideoInterface import RedditVideoInterface
+from video.RedditCommentVideoInterface import RedditCommentVideoInterface
 
 from settings import *
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
 
     print("Generating new compilation...\n")
 
-    updateVideoDeatils()
+    #updateVideoDeatils()
 
-    newCompilation = RedditVideoInterface("contagiouslaughter")
+    newCompilation = RedditCommentVideoInterface()
     newCompilation.generateVideoList()
