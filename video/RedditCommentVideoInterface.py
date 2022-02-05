@@ -1,3 +1,5 @@
+import sys
+from cv2 import exp
 import praw
 from praw.models import base
 import requests
@@ -12,6 +14,7 @@ from selenium.webdriver.firefox import service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from video.RedditComment import RedditComment
 from boto3 import Session
 from .secrets import reddit_secret, reddit_id, aws_access_key_id, aws_secret_access_key
@@ -46,19 +49,20 @@ class RedditCommentVideoInterface:
         self.removeUnusable()
         self.makeVideos()
 
-
     def populateList(self):
-        subMis = self.redditInstance.submission(id="iwedc5")
+        subMis = self.redditInstance.submission(id="skjc3x")
 
         drv = self.setUpRedditPage(subMis)
 
-        for idx, comment in enumerate(subMis.comments[1:3]):
+        for idx, comment in enumerate(subMis.comments[1:5]):
             cmt = RedditComment(self.polly, drv, comment, idx+1)
-            cmt.populateChildComments()
-            cmt.buildVideoFrames2()
 
-            if(cmt.goodToUse):
-                self.comments.append(cmt)
+            if(len(comment.body.split(" ")) < cmt.MAX_AMOUNT_OF_WORDS): # Check for parent comment to be reasonable in length
+                cmt.populateChildComments()
+                cmt.buildVideoFrames()
+
+                if(cmt.goodToUse):
+                    self.comments.append(cmt)
 
         drv.quit()
 
@@ -73,25 +77,30 @@ class RedditCommentVideoInterface:
         self.processVideoAndCleanUp()
         # Combine in one
         self.concat()
-        # Get rid of files used in concat
-        self.cleanUpFilesForConcat()
 
     def processAudio(self):
         for comment in self.comments:
+            duration = 0
             if(comment.goodToUse == True): # Add case for no child
                 concatFileDir = comment.concatFileDir.replace("\\", "/") # Bug in FFMPEG where \ is not good for input file
                 with open(concatFileDir, 'w') as f:
                     f.write(f"file '{comment.name}.mp3'\n")
+                    duration += comment.dur
                     for child in comment.childComments:
-                        f.write(f"file 'silence075.mp3'\n")
+                        f.write(f"file 'silent075.mp3'\n")
                         f.write(f"file '{child.name}.mp3'\n")
+                        duration += child.dur + self.SILENCE_TIME
+                
+                    f.write(f"file 'silent075.mp3'\n")
+                    duration += self.SILENCE_TIME
+                comment.totalVidDuration = duration
 
-            subprocess.call(f'ffmpeg -f concat -safe 0 -i {concatFileDir} -c copy {comment.concatAudioFilePath}', shell=True)
+            subprocess.call(f'ffmpeg -f concat -safe 0 -i {concatFileDir} -t {duration} -c copy {comment.concatAudioFilePath}', shell=True)
 
     def processVideoAndCleanUp(self):
         for comment in self.comments:
             if(len(comment.childComments)==0):
-                ffmpegCommand = f"ffmpeg -loop 1 -y -i {comment.commentFrameDir} -i {comment.concatAudioFilePath} -shortest {comment.finalSave}"
+                ffmpegCommand = f"ffmpeg -loop 1 -y -i {comment.commentFrameDir} -i {comment.concatAudioFilePath} -t {comment.totalVidDuration} {comment.finalSave}"
             else:
                 inputString = f"-i {comment.commentFrameDir}"
 
@@ -111,18 +120,13 @@ class RedditCommentVideoInterface:
                     durationToWait += child.dur + self.SILENCE_TIME
                     prevTemp = f"tmp{idx+1}"
 
-                ffmpegCommand = f'ffmpeg -loop 1 -y {inputString} -i {comment.concatAudioFilePath} -filter_complex "{filterString}" -shortest {comment.finalSave}'
+                ffmpegCommand = f'ffmpeg -loop 1 -y {inputString} -i {comment.concatAudioFilePath} -filter_complex "{filterString}" -t {comment.totalVidDuration} {comment.finalSave}'
 
-            
             subprocess.call(ffmpegCommand, shell=True)
 
             self.vidHandler.addVid(comment.finalSave)
 
             self.cleanupCommentFiles(comment)
-
-    def cleanUpFilesForConcat(self):
-        for comment in self.comments:
-            os.remove(comment.finalSave)
 
     def cleanupCommentFiles(self, cmt: RedditComment):
         os.remove(cmt.commentFrameDir)
@@ -135,6 +139,14 @@ class RedditCommentVideoInterface:
             os.remove(child.commentFrameDir)
             os.remove(child.pngPath)
             os.remove(child.mp3Path)
+
+    def buildConcatList(self):
+        vidList = []
+        for comment in self.comments:
+            vidList.append(comment.finalSave)
+            if(comment != self.comments[-1]):
+                vidList.append(CUT_FILE_DIR)
+        return vidList
     
     def buildConcatText(self):
         with open(self.concatVidListDir, 'w') as f:
@@ -144,8 +156,9 @@ class RedditCommentVideoInterface:
                     f.write(f"file cut75fps.mp4\n")
 
     def concat(self):
-        self.buildConcatText()
-        self.vidHandler.concatFFmpeg(self.concatVidListDir)
+        #self.buildConcatText()
+        #self.vidHandler.concatFFmpeg(self.concatVidListDir)
+        self.vidHandler.concatVidList(self.comments)
 
     def setUpRedditPage(self, subMission: Submission):
 
@@ -158,11 +171,31 @@ class RedditCommentVideoInterface:
         ser = Service(GECKO_DIR)
         drv = Firefox(options=opts, service=ser)
         drv.execute_script("document.body.style.zoom='250%'")
-        
+    
         drv.get(cmts)
-        profile_btn = drv.find_element(By.ID, "USER_DROPDOWN_ID")
-        profile_btn.click()
-        night_mode_btn = drv.find_element(By.XPATH, "//div[@role='menu']/button")
-        night_mode_btn.click()
+        wait = WebDriverWait(drv, 10)
+        try:
+            profile_btn = wait.until(EC.presence_of_element_located((By.ID, "USER_DROPDOWN_ID"))) 
+            profile_btn.click()
+
+            nightModeThere = False
+
+            try:
+                night_mode_btn = drv.find_element(By.XPATH, "//div[@role='menu']/button")
+                night_mode_btn.click()
+                nightModeThere = True
+            except:
+                " Do nothing"
+            
+            if not nightModeThere:
+                settings_button = wait.until(EC.presence_of_element_located((By.XPATH, "(//div[@role='menu']/div/button)[3]")))
+                settings_button.click()
+
+                night_mode_btn = wait.until(EC.presence_of_element_located((By.XPATH, "(//div[@role='menu']/div/div)[3]/button")))
+                night_mode_btn.click()
+                
+        except:
+            print("Reddit could not be accessed properly. Quiting...")
+            sys.exit()
 
         return drv

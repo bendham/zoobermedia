@@ -44,4 +44,5 @@ COMMENT_FINAL_AUDIO_DIR = os.path.join(COMMENT_MP4_DIR, "final_audio")
 
 RESOURCES_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "resources")
 BACKGROUND_FILE_DIR = os.path.join(RESOURCES_DIR, "blank.png")
-SILENCE_FILE_DIR = os.path.join(RESOURCES_DIR, "silence_2.mp3")
+SILENCE_FILE_DIR = os.path.join(RESOURCES_DIR, "silent075.mp3")
+CUT_FILE_DIR = os.path.join(RESOURCES_DIR, "cut75fps.mp4")

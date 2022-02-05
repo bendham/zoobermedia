@@ -62,9 +62,33 @@ class VideoHandler:
             video.reader.close()
             os.remove(vidList[idx])
 
+    def concatVidList(self, vidList):
+        moviePyVids = []
+    
+        for vid in vidList:
+            moviePyVids.append(VideoFileClip(vid.finalSave))
+            if(vid != vidList[-1]):
+                moviePyVids.append(VideoFileClip(CUT_FILE_DIR))
+        
+        moviePyVids.append(VideoFileClip(ZOOBER_OUTRO))
+        
+        finClip = concatenate_videoclips(moviePyVids, method='compose')
+        finClip.write_videofile(FINAL_SAVE)
+        
+        # Close and get rid of last item (the outro)
+        moviePyVids[-1].reader.close()
+        moviePyVids = moviePyVids[:-1]
+
+        # Close and get rid of all videos
+        for video in moviePyVids:
+            video.reader.close()
+            
+        for idx, video in enumerate(vidList):   
+            os.remove(vidList[idx].finalSave)
+
     def concatFFmpeg(self, textDir):
         textFileDir = textDir.replace("\\", "/")
         subprocess.call(f"ffmpeg -f concat -safe 0 -i {textFileDir} -c copy {FINAL_SAVE}", shell=True)
 
-        os.remove(textDir)
+        #os.remove(textDir)
     

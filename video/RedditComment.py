@@ -24,6 +24,8 @@ class RedditComment:
     timeout = 20
     goodToUse = False
 
+    totalVidDuration = 0
+
     h = 0
     w = 0
 
@@ -61,9 +63,6 @@ class RedditComment:
             cmt.screenshot(self.pngPath)
         
         if(self.goodToUse == True):
-            #self.speechEngine.save_to_file(self.com.body, self.mp3Path)
-            #self.speechEngine.runAndWait()
-
             hasAudio = self.requestAudio()
 
             if(hasAudio):
@@ -158,16 +157,13 @@ class RedditComment:
 
         return f1
 
-    def buildVideoFrames2(self):
+    def buildVideoFrames(self):
 
         bgBase = Image.open(BACKGROUND_FILE_DIR)
         bgX, bgY = bgBase.size
 
-
-        
         hOffset = (bgY-self.h)//8 # check
         
-
         totalCommentHeight = 0
         commentList = []
         commentImg = RedditCommentImage(self)
@@ -203,31 +199,6 @@ class RedditComment:
 
             prevCommentH = comment.h
             hOffset += prevCommentH
-
-
-    def buildVideoFrames(self):
-        bgBase = Image.open(BACKGROUND_FILE_DIR)
-        bgX, bgY = bgBase.size
-
-        f1 = self.resizeCommentImage()
-        wOffset = (bgX-self.w)//2
-        hOffset = (bgY-self.h)//8
-
-        bgBase.paste(f1, (wOffset, hOffset))
-
-        self.commentFrameDir = os.path.join(COMMENT_PNG_FRAME_DIR, f"f1_{self.getId()}.png")
-        bgBase.save(os.path.join(COMMENT_PNG_FRAME_DIR, self.commentFrameDir))
-
-
-        prevCommentH = self.h
-        for idx, comment in enumerate(self.childComments):
-            f1 = comment.resizeCommentImage()
-            hOffset += prevCommentH
-            bgBase.paste(f1, ((wOffset, hOffset)))
-            comment.commentFrameDir = os.path.join(COMMENT_PNG_FRAME_DIR, f"f{str(idx+2)}_{self.getId()}.png")
-            bgBase.save(os.path.join(COMMENT_PNG_FRAME_DIR, comment.commentFrameDir))
-
-            prevCommentH = comment.h
 
     def getId(self):
         return self.com.id
