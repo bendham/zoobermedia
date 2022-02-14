@@ -62,18 +62,18 @@ class VideoHandler:
             video.reader.close()
             os.remove(vidList[idx])
 
-    def concatVidList(self, vidList):
+    def concatVidList(self, vidList, saveLocation):
         moviePyVids = []
     
         for vid in vidList:
             moviePyVids.append(VideoFileClip(vid.finalSave))
-            if(vid != vidList[-1]):
-                moviePyVids.append(VideoFileClip(CUT_FILE_DIR))
+            # if(vid != vidList[-1]):
+            #     moviePyVids.append(VideoFileClip(CUT_FILE_DIR))
         
-        moviePyVids.append(VideoFileClip(ZOOBER_OUTRO))
+        #moviePyVids.append(VideoFileClip(ZOOBER_OUTRO))
         
         finClip = concatenate_videoclips(moviePyVids, method='compose')
-        finClip.write_videofile(FINAL_SAVE)
+        finClip.write_videofile(saveLocation)
         
         # Close and get rid of last item (the outro)
         moviePyVids[-1].reader.close()

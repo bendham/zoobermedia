@@ -12,6 +12,7 @@ from moviepy.editor import AudioFileClip
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from video.RedditCommentImage import RedditCommentImage
+from praw.models import MoreComments
 
 
 class RedditComment:
@@ -108,10 +109,11 @@ class RedditComment:
         child = self.com.replies[0]
         threadId = child.id
 
+        if(type(child)==MoreComments): # I dont deal with this case for right now...
+            isStillGoodComments = False
+
         while(isStillGoodComments):
             if(child.score/compareScore >= self.PERCENT_TO_BEAT and commentCount < self.MAX_CHILD_COMMENTS):
-                print("YOYOYO")
-                print(child.body)
                 if(len(child.body.split(" ")) < self.MAX_AMOUNT_OF_WORDS):
 
                     if(commentCount == 2):
@@ -175,24 +177,14 @@ class RedditComment:
             totalCommentHeight += commentImg.h
 
         wOffset = (bgX-commentList[0].w)//2
-
-        print(f"totalCommentHeight: {totalCommentHeight}")
-        
-        print(f"(bgY - hOffset) {bgY - hOffset}")
         rescaleHeightFactor = (bgY - hOffset)/totalCommentHeight
-        print(f"rescaleHeightFactor: {rescaleHeightFactor}")
 
-
-        print(f"rescaleHeightFactor*self.w: {rescaleHeightFactor*self.w}")
         if(rescaleHeightFactor*commentList[0].w > bgX):
             rescaleHeightFactor = (bgX-wOffset)/commentList[0].w
-            print(f"rescaleHeightFactor: {rescaleHeightFactor}")
-
 
         prevCommentH = hOffset
         for idx, comment in enumerate(commentList):
             f1 = comment.resizeCommentImage(rescaleHeightFactor)
-            print(f"hOffset: {hOffset}")
             bgBase.paste(f1, ((bgX-comment.w)//2, hOffset))
             comment.redditComment.commentFrameDir = os.path.join(COMMENT_PNG_FRAME_DIR, f"f{str(idx+1)}_{self.getId()}.png")
             bgBase.save(os.path.join(COMMENT_PNG_FRAME_DIR, comment.redditComment.commentFrameDir))

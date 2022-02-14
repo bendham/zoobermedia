@@ -1374,3 +1374,193 @@ JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.d76a91
 
 ###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
 
+1644685520891	geckodriver	INFO	Listening on 127.0.0.1:62969
+1644685523916	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "62970" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileP0DzdC"
+*** You are running in headless mode.
+1644685524414	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileP0DzdC\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:62970/devtools/browser/be71882c-40da-461f-b78e-cee30f20b120
+1644685525668	Marionette	INFO	Listening on port 62975
+1644685526028	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644685547077	Marionette	INFO	Stopped listening on port 62975
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644687088863	geckodriver	INFO	Listening on 127.0.0.1:60901
+1644687091890	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "60902" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofilea9FK1O"
+*** You are running in headless mode.
+1644687092156	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofilea9FK1O\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:60902/devtools/browser/23138545-ac99-45fe-b27f-4ef4a1a3caf8
+1644687093251	Marionette	INFO	Listening on port 60907
+1644687093438	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilea9FK1O\thumbnails) because it does not exist
+emoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644687813780	Marionette	INFO	Stopped listening on port 61230
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644687818675	geckodriver	INFO	Listening on 127.0.0.1:61307
+1644687821708	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "61308" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofilejTnWeS"
+*** You are running in headless mode.
+1644687821962	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofilejTnWeS\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:61308/devtools/browser/444a929f-56c0-40c1-85e9-eef3d9509f4d
+1644687822991	Marionette	INFO	Listening on port 61314
+1644687823246	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644687831937	Marionette	INFO	Stopped listening on port 61314
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644687912502	geckodriver	INFO	Listening on 127.0.0.1:61398
+1644687915547	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "61399" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofilejuFJBY"
+*** You are running in headless mode.
+1644687915796	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofilejuFJBY\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:61399/devtools/browser/5e059390-0520-4d68-b1e3-2966623d1393
+1644687916865	Marionette	INFO	Listening on port 61404
+1644687917073	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilejuFJBY\thumbnails) because it does not exist
+l\Temp\rust_mozprofilewOHOHF\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilewOHOHF\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilewOHOHF\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilewOHOHF\thumbnails) because it does not exist
+JavaScript error: resource://gre/modules/PromiseWorker.jsm, line 106: Error: Could not get children of file(C:\Users\bendh\AppData\Local\Temp\rust_mozprofilewOHOHF\thumbnails) because it does not exist
+1644815510502	geckodriver	INFO	Listening on 127.0.0.1:55120
+1644815513528	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "55121" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileEqqAYP"
+*** You are running in headless mode.
+1644815514199	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileEqqAYP\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55121/devtools/browser/ef6d22fa-26c9-4f5c-960f-577bfb806a43
+1644815515578	Marionette	INFO	Listening on port 55126
+1644815515775	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644815533317	Marionette	INFO	Stopped listening on port 55126
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644815573260	geckodriver	INFO	Listening on 127.0.0.1:55214
+1644815576299	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "55215" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileatmUIA"
+*** You are running in headless mode.
+1644815576559	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileatmUIA\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55215/devtools/browser/b45d5729-1987-4d73-b0b2-356d8c0b6976
+1644815577630	Marionette	INFO	Listening on port 55221
+1644815577840	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644815587101	Marionette	INFO	Stopped listening on port 55221
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644815612644	geckodriver	INFO	Listening on 127.0.0.1:55302
+1644815615678	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "55303" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileG6koMi"
+*** You are running in headless mode.
+1644815615937	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileG6koMi\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55303/devtools/browser/1d42eb58-1917-4e1b-b496-a7aabd104620
+1644815616986	Marionette	INFO	Listening on port 55309
+1644815617221	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644815854308	geckodriver	INFO	Listening on 127.0.0.1:53934
+1644815857343	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "53935" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileef9oFD"
+*** You are running in headless mode.
+1644815857625	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileef9oFD\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:53935/devtools/browser/6f257d45-64d6-4d0f-97cc-b2756e9f2f80
+1644815858901	Marionette	INFO	Listening on port 53940
+1644815859387	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644816000516	geckodriver	INFO	Listening on 127.0.0.1:54590
+1644816003559	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "54591" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileWCdCzg"
+*** You are running in headless mode.
+1644816004000	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileWCdCzg\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54591/devtools/browser/f98cc071-81f0-427c-8bbe-22c5caa01ac0
+1644816005174	Marionette	INFO	Listening on port 54596
+1644816005274	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644816017175	Marionette	INFO	Stopped listening on port 54596
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644816091817	geckodriver	INFO	Listening on 127.0.0.1:54697
+1644816094865	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "54698" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofiledpBGMF"
+*** You are running in headless mode.
+1644816095135	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofiledpBGMF\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54698/devtools/browser/6613922a-ba52-4ec8-8258-0834f5548cb1
+1644816096260	Marionette	INFO	Listening on port 54705
+1644816096413	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644816108583	Marionette	INFO	Stopped listening on port 54705
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1644816145647	geckodriver	INFO	Listening on 127.0.0.1:54794
+1644816148694	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "54795" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileorDc8D"
+*** You are running in headless mode.
+1644816149064	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileorDc8D\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54795/devtools/browser/6f666552-f614-49e8-bdcd-585d7bf6b123
+1644816150262	Marionette	INFO	Listening on port 54800
+1644816150331	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644816159794	Marionette	INFO	Stopped listening on port 54800
+1644816202604	geckodriver	INFO	Listening on 127.0.0.1:54875
+1644816205641	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "54876" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileNce5gT"
+*** You are running in headless mode.
+1644816205940	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileNce5gT\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54876/devtools/browser/4e99d620-bcab-43e7-b16f-48b5c1e07af9
+1644816207074	Marionette	INFO	Listening on port 54882
+1644816207203	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+JavaScript warning: https://www.redditstatic.com/accountmanager/ssoOneTap.9275200ea20cc87eb3ec.js, line 1: unreachable code after return statement
+1644816221641	Marionette	INFO	Stopped listening on port 54882
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+

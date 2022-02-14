@@ -1,3 +1,4 @@
+from ntpath import join
 import os
 
 GECKO_DIR = r"C:\Users\bendh\geckodriver-v0.30.0-win64\geckodriver.exe"
@@ -40,9 +41,12 @@ COMMENT_MP3_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_mp3")
 COMMENT_MP4_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_mp4")
 COMMENT_FINAL_VIDEO_DIR = os.path.join(COMMENT_MP4_DIR, "final_video")
 COMMENT_FINAL_AUDIO_DIR = os.path.join(COMMENT_MP4_DIR, "final_audio")
+COMMENT_FINAL_DIR = os.path.join(COMMENT_MP4_DIR, "final")
+CONCAT_VID_LIST_FILE = os.path.join(COMMENT_FINAL_VIDEO_DIR, "concat.txt")
 
 
 RESOURCES_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "resources")
 BACKGROUND_FILE_DIR = os.path.join(RESOURCES_DIR, "blank.png")
 SILENCE_FILE_DIR = os.path.join(RESOURCES_DIR, "silent075.mp3")
 CUT_FILE_DIR = os.path.join(RESOURCES_DIR, "cut75fps.mp4")
+FONT_FILE_DIR = os.path,join(RESOURCES_DIR, "Anson-Regular.otf")
