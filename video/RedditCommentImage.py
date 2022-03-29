@@ -8,14 +8,8 @@ class RedditCommentImage:
 
     def resizeCommentImage(self, rescaleFactor):
 
-        print(f"prevH: {self.h}")
-        print(f"prevW: {self.w}")
-
         self.h = int(self.h*rescaleFactor)
         self.w = int(self.w*rescaleFactor)
-
-        print(f"newH: {self.h}")
-        print(f"newW: {self.w}")
 
         f1 = ImageOps.fit(self.img, (self.w, self.h))
 

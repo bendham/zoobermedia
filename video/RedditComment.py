@@ -1,4 +1,3 @@
-from re import S
 from praw.reddit import Comment
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -13,6 +12,9 @@ from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 from video.RedditCommentImage import RedditCommentImage
 from praw.models import MoreComments
+from video.Helpers import *
+from selenium.webdriver.common.action_chains import ActionChains
+import math
 
 
 class RedditComment:
@@ -30,7 +32,8 @@ class RedditComment:
     h = 0
     w = 0
 
-    def __init__(self, speechEngine, drv: WebDriver, com: Comment, identifier) -> None:
+    def __init__(self, speechEngine, drv: WebDriver, com: Comment, identifier, url) -> None:
+        self.urlToUse = url
         self.com = com
         self.drv = drv
         self.identifier = f"{identifier}_"
@@ -55,16 +58,20 @@ class RedditComment:
 
     def screenShotAndMp3(self):
         try:
-            cmt = WebDriverWait(self.drv, self.timeout).until(
-            lambda x: x.find_element(By.ID, self.getElmId()))
+            cmt = WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.ID, self.getElmId())))
+            self.drv.execute_script("arguments[0].scrollIntoView();", cmt)
+            WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.XPATH, f"//div[@id='{self.getElmId()}']/div[2]/div/a[@data-testid='comment_author_icon']")))
+            cmt = WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.ID, self.getElmId())))
+            
         except TimeoutException:
             print("Page load timed out, will not use this comment...")
+            self.goodToUse = False
         else:
             self.goodToUse = True
             cmt.screenshot(self.pngPath)
         
         if(self.goodToUse == True):
-            hasAudio = self.requestAudio()
+            hasAudio = requestAudio(self.speechEngine, self.mp3Path, self.com.body, "Matthew")
 
             if(hasAudio):
                 audioclip = AudioFileClip(self.mp3Path)
@@ -73,43 +80,19 @@ class RedditComment:
             else:
                 self.goodToUse = False
 
-    def requestAudio(self) -> bool:
-        try:
-            # Request speech synthesis
-            response = self.speechEngine.synthesize_speech(Text=self.com.body, OutputFormat="mp3", VoiceId="Brian")
-        except (BotoCoreError, ClientError) as error:
-            # The service returned an error
-            print(error)
-            return False
-
-            # Access the audio stream from the response
-        if "AudioStream" in response:
-            with closing(response["AudioStream"]) as stream:
-                output = os.path.join(self.mp3Path)
-
-                try:
-                    # Open a file for writing the output as a binary stream
-                    with open(output, "wb") as file:
-                        file.write(stream.read())
-                        return True
-                except IOError as error:
-                    # Could not write to file, exit gracefully
-                    print(error)
-                    return False
-        else:
-            # The response didn't contain audio data, exit gracefully
-            print("Could not stream audio")
-            return False
-
     def populateChildComments(self):
         isStillGoodComments = True
         clickedContinueThread = False
         commentCount = 1
         compareScore = self.com.score
-        child = self.com.replies[0]
-        threadId = child.id
 
-        if(type(child)==MoreComments): # I dont deal with this case for right now...
+        replies = self.com.replies
+        if(len(replies)): # Is this right?
+            child = self.com.replies[0]
+            threadId = child.id
+            if(type(child)==MoreComments): # I dont deal with this case for right now...
+                isStillGoodComments = False
+        else:
             isStillGoodComments = False
 
         while(isStillGoodComments):
@@ -118,10 +101,16 @@ class RedditComment:
 
                     if(commentCount == 2):
                         try:
+                            # Is this the problem?
                             threadElm = WebDriverWait(self.drv, self.timeout).until(
                             lambda x: x.find_element(By.XPATH, f"//div[@id='continueThread-t1_{threadId}']/div[2]/a"))
                             
                             threadElm.click()
+
+                            newCmt = WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.ID, f"t1_{child.id}")))
+            
+                            self.drv.execute_script("arguments[0].scrollIntoView();", newCmt)
+                            
                         except TimeoutException:
                             isStillGoodComments = False
                             print("Page load timed out, could not continue the thread...")
@@ -129,7 +118,7 @@ class RedditComment:
                         else:
                             clickedContinueThread = True
 
-                    redditChildComment = RedditComment(self.speechEngine, self.drv, child, self.identifier + str(commentCount))
+                    redditChildComment = RedditComment(self.speechEngine, self.drv, child, self.identifier + str(commentCount), self.urlToUse)
                     if(redditChildComment.goodToUse == True):
                         self.childComments.append(redditChildComment)
                         compareScore = child.score
@@ -145,13 +134,14 @@ class RedditComment:
 
         if(clickedContinueThread):
             self.drv.execute_script("window.history.go(-1)")
+            #self.drv.get(self.urlToUse)
 
-    def resizeCommentImage(self):
+    def resizeCommentImage(self, scaleFactor):
         f1 = Image.open(self.pngPath)
         self.w, self.h = f1.size
 
-        self.h = int(self.COMMENT_WIDTH/self.w*self.h)
-        self.w = self.COMMENT_WIDTH
+        self.h = math.floor(scaleFactor*self.h)
+        self.w = math.floor(scaleFactor*self.w)
 
         #f1 = f1.resize((self.w, self.h), Image.ANTIALIAS)
 
@@ -164,7 +154,7 @@ class RedditComment:
         bgBase = Image.open(BACKGROUND_FILE_DIR)
         bgX, bgY = bgBase.size
 
-        hOffset = (bgY-self.h)//8 # check
+        
         
         totalCommentHeight = 0
         commentList = []
@@ -172,25 +162,72 @@ class RedditComment:
         commentList.append(commentImg)
         totalCommentHeight += commentImg.h
         for comment in self.childComments:
-            commentImg = RedditCommentImage(comment)
-            commentList.append(commentImg)
-            totalCommentHeight += commentImg.h
+            if(comment.goodToUse): # There has to be a better way
+                commentImg = RedditCommentImage(comment)
+                commentList.append(commentImg)
+                totalCommentHeight += commentImg.h
+            else:
+                break
+                
+        totalHeightSpace = bgY*0.8
+        scaleFactor = totalHeightSpace/totalCommentHeight
+        usedScaleFactor = scaleFactor
 
-        wOffset = (bgX-commentList[0].w)//2
-        rescaleHeightFactor = (bgY - hOffset)/totalCommentHeight
+        if(scaleFactor*commentList[0].w > bgX):
+            usedScaleFactor = (bgX*0.95)/commentList[0].w
 
-        if(rescaleHeightFactor*commentList[0].w > bgX):
-            rescaleHeightFactor = (bgX-wOffset)/commentList[0].w
+        newTotalHeight = 0
+        for comment in commentList:
+            newTotalHeight += comment.h*usedScaleFactor
 
-        prevCommentH = hOffset
+        prevCommentH = 0
+        hOffset = 0
         for idx, comment in enumerate(commentList):
-            f1 = comment.resizeCommentImage(rescaleHeightFactor)
-            bgBase.paste(f1, ((bgX-comment.w)//2, hOffset))
+            
+            f1 = comment.resizeCommentImage(usedScaleFactor)
+            bgBase.paste(f1, ((bgX-f1.width)//2, math.floor((bgY-newTotalHeight)//2 + hOffset)))
             comment.redditComment.commentFrameDir = os.path.join(COMMENT_PNG_FRAME_DIR, f"f{str(idx+1)}_{self.getId()}.png")
             bgBase.save(os.path.join(COMMENT_PNG_FRAME_DIR, comment.redditComment.commentFrameDir))
 
-            prevCommentH = comment.h
+            prevCommentH = f1.height
+
             hOffset += prevCommentH
+
+    # def buildVideoFrames(self):
+
+    #     bgBase = Image.open(BACKGROUND_FILE_DIR)
+    #     bgX, bgY = bgBase.size
+
+    #     hOffset = (bgY-self.h)/8 # check
+        
+    #     totalCommentHeight = 0
+    #     commentList = []
+    #     commentImg = RedditCommentImage(self)
+    #     commentList.append(commentImg)
+    #     totalCommentHeight += commentImg.h
+    #     for comment in self.childComments:
+    #         if(comment.goodToUse): # There has to be a better way
+    #             commentImg = RedditCommentImage(comment)
+    #             commentList.append(commentImg)
+    #             totalCommentHeight += commentImg.h
+    #         else:
+    #             break
+
+    #     wOffset = (bgX-commentList[0].w)/2
+    #     rescaleHeightFactor = (bgY - hOffset)/totalCommentHeight
+
+    #     if(rescaleHeightFactor*commentList[0].w > bgX):
+    #         rescaleHeightFactor = (bgX-wOffset)//commentList[0].w
+
+    #     prevCommentH = hOffset
+    #     for idx, comment in enumerate(commentList):
+    #         f1 = comment.resizeCommentImage(rescaleHeightFactor)
+    #         bgBase.paste(f1, ((bgX-comment.w)//2, math.floor(hOffset)))
+    #         comment.redditComment.commentFrameDir = os.path.join(COMMENT_PNG_FRAME_DIR, f"f{str(idx+1)}_{self.getId()}.png")
+    #         bgBase.save(os.path.join(COMMENT_PNG_FRAME_DIR, comment.redditComment.commentFrameDir))
+
+    #         prevCommentH = comment.h
+    #         hOffset += prevCommentH
 
     def getId(self):
         return self.com.id

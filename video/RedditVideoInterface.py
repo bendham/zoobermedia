@@ -23,8 +23,6 @@ class RedditVideoInterface:
 
         self.vidHandler = VideoHandler()
 
-
-
     def setSub(self, subreddit):
        return self.redditInstance.subreddit(subreddit)
 

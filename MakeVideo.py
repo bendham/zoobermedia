@@ -22,5 +22,5 @@ if __name__ == "__main__":
     #updateVideoDeatils()
 
     #  "sn0dml", "snri8v", "sn3qsx",
-    newCompilation = RedditCommentVideoInterface(["sn0dml", "snri8v", "sn3qsx"])
+    newCompilation = RedditCommentVideoInterface(["himsju", "kka536", "hvbvpz"])
     newCompilation.generateVideoList()

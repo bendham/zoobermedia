@@ -62,7 +62,7 @@ class VideoHandler:
             video.reader.close()
             os.remove(vidList[idx])
 
-    def concatVidList(self, vidList, saveLocation):
+    def concatVidList(self, vidList, saveLocation, hasOutro=False):
         moviePyVids = []
     
         for vid in vidList:
@@ -70,14 +70,13 @@ class VideoHandler:
             # if(vid != vidList[-1]):
             #     moviePyVids.append(VideoFileClip(CUT_FILE_DIR))
         
-        #moviePyVids.append(VideoFileClip(ZOOBER_OUTRO))
-        
         finClip = concatenate_videoclips(moviePyVids, method='compose')
         finClip.write_videofile(saveLocation)
-        
-        # Close and get rid of last item (the outro)
-        moviePyVids[-1].reader.close()
-        moviePyVids = moviePyVids[:-1]
+        if(hasOutro):
+            # Close and get rid of last item (the outro)
+            moviePyVids[-1].reader.close()
+            moviePyVids = moviePyVids[:-1]
+            vidList = vidList[:-1]
 
         # Close and get rid of all videos
         for video in moviePyVids:
@@ -88,7 +87,7 @@ class VideoHandler:
 
     def concatFFmpeg(self, textDir):
         textFileDir = textDir.replace("\\", "/")
-        subprocess.call(f"ffmpeg -f concat -safe 0 -i {textFileDir} -c copy {FINAL_SAVE}", shell=True)
+        subprocess.call(f"ffmpeg -hide_banner -loglevel error -f concat -safe 0 -i {textFileDir} -c copy {FINAL_SAVE}", shell=True)
 
         #os.remove(textDir)
     

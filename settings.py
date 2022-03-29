@@ -35,6 +35,9 @@ YOUTUBE_API_UPLOAD_TITLE = os.path.join(YOUTUBE_API,"title")
 
 REDDIT_COMMENT_READING_DIR = os.path.join(BIN_DIR, "reddit_comment_reading")
 
+SUB_BACKGROUND = os.path.join(REDDIT_COMMENT_READING_DIR, "background")
+
+COMMENT_PNG_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_png")
 COMMENT_PNG_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_png")
 COMMENT_PNG_FRAME_DIR = os.path.join(COMMENT_PNG_DIR, "frames")
 COMMENT_MP3_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_mp3")
