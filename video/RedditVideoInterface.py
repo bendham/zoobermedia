@@ -5,12 +5,13 @@ import requests
 from .secrets import reddit_secret, reddit_id
 from settings import *
 import subprocess
+from Helpers import setAttemptTo
 
 
 class RedditVideoInterface:
 
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    MAX_VIDEOS = 3
+    MAX_VIDEOS = 25
 
     def __init__(self, subredditString):
 
@@ -33,6 +34,8 @@ class RedditVideoInterface:
         self.processVideos()
         self.getThumbnail()
         self.concat()
+
+        setAttemptTo('success')
 
     def populateList(self):
         vidNumber = 1

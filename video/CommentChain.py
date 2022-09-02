@@ -3,10 +3,12 @@ from asyncio.windows_events import NULL
 
 
 from RedditComment import RedditComment
-
+from selenium.webdriver.firefox.webdriver import WebDriver
 class CommentChain:
+    def __init__(self, drv: WebDriver, speechEngine) -> None:
+        self.web_driver = drv
+        self.speech_engine = speechEngine
 
-    def __init__(self) -> None:
         self.top = NULL
         self.count = 0
     
@@ -22,8 +24,6 @@ class CommentChain:
             cur = cur.nextComment
         
         cur.next = comment
-
-
 
     # def populateChildComments(self):
     #     isStillGoodComments = True

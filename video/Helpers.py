@@ -1,6 +1,9 @@
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
 import subprocess
+import os
+from settings import *
+import json
 
 def requestAudio(speechEngine, savePath, message, voice_to_use) -> bool:
         try:
@@ -32,3 +35,111 @@ def turnPictureIntoVideo(picDir, audDir, dur, saveDir):
     ffmpegCommand = f"ffmpeg -loop 1 -y -i {picDir} -i {audDir} -t {dur} {saveDir}"
     subprocess.call(ffmpegCommand, shell=True)
 
+def deleteDirectory(directory, exclude=[]):
+    files = [f for f in os.listdir(directory)]
+
+    if len(exclude) >= 1:
+        for exc in exclude:
+            for file in files:
+                if exc in file:
+                    files.remove(file)
+
+    for file in files:
+        os.remove(os.path.join(directory, file))
+
+
+def cleanUpFiles():
+    deleteDirectory(THUMBNAIL_SAVE_DIR)
+    deleteDirectory(FINAL_DIR)
+    deleteDirectory(COMMENT_MP3_DIR, ["silent075"])
+    deleteDirectory(COMMENT_FINAL_VIDEO_DIR)
+    deleteDirectory(COMMENT_FINAL_AUDIO_DIR)
+    deleteDirectory(COMMENT_FINAL_DIR)
+    deleteDirectory(COMMENT_PNG_DIR, ['frames'])
+    deleteDirectory(COMMENT_PNG_FRAME_DIR)
+
+def updateVideoDeatils():
+
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        videoDetails['content'][videoDetails['video']]['number'] = videoDetails['content'][videoDetails['video']]['number'] + 1
+
+        vidFile.seek(0)
+        vidFile.truncate()
+
+        json.dump(videoDetails, vidFile, indent=1)
+
+def isVideoSuccess():
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        attempt = json.load(vidFile)['attempt']
+
+    if attempt == 'success':
+        return True
+    else:
+        return False
+
+def setVideoToMake(update):
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        videoDetails['video'] = update
+
+        vidFile.seek(0)
+        vidFile.truncate()
+
+        json.dump(videoDetails, vidFile, indent=1)
+
+def setAttemptTo(update):
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        videoDetails['attempt'] = update
+
+        vidFile.seek(0)
+        vidFile.truncate()
+
+        json.dump(videoDetails, vidFile, indent=1)
+
+def readDay():
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+           return json.load(vidFile)['day']
+
+def addDay():
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        videoDetails['day'] = (videoDetails['day'] + 1) % 7
+
+        vidFile.seek(0)
+        vidFile.truncate()
+
+        json.dump(videoDetails, vidFile, indent=1)
+
+def updateSubIds():
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        listOfSubids = videoDetails['content']['redditcomment']['meta']
+        oldSubids = videoDetails['content']['redditcomment']['old']
+
+        if len(listOfSubids) >= 1:
+            usableSubids = listOfSubids[0]
+            oldSubids.append(usableSubids)
+
+            videoDetails['content']['redditcomment']['meta'] = listOfSubids[1:]
+            videoDetails['content']['redditcomment']['old'] = oldSubids
+
+            vidFile.seek(0)
+            vidFile.truncate()
+
+            json.dump(videoDetails, vidFile, indent=1)
+
+            return usableSubids
+        else:
+            return None
+
+def getSubIds():
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        listOfSubids = videoDetails['content']['redditcomment']['meta']
+        if len(listOfSubids) >= 1:
+            usableSubids = listOfSubids[0]
+            return usableSubids
+        else:
+            return None

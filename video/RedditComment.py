@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from settings import BACKGROUND_FILE_DIR, COMMENT_PNG_DIR, COMMENT_MP3_DIR, COMMENT_PNG_FRAME_DIR, COMMENT_FINAL_VIDEO_DIR, COMMENT_FINAL_AUDIO_DIR
 import os
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageDraw
 from moviepy.editor import AudioFileClip
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
@@ -22,7 +22,7 @@ class RedditComment:
     PERCENT_TO_BEAT = 0.3
     MAX_CHILD_COMMENTS = 4
     COMMENT_WIDTH = 1024
-    MAX_AMOUNT_OF_WORDS = 60
+    MAX_AMOUNT_OF_WORDS = 65
 
     timeout = 20
     goodToUse = False
@@ -32,7 +32,7 @@ class RedditComment:
     h = 0
     w = 0
 
-    def __init__(self, speechEngine, drv: WebDriver, com: Comment, identifier, url) -> None:
+    def __init__(self, speechEngine, drv: WebDriver, com: Comment, identifier, url, pollyVoice="Matthew") -> None:
         self.urlToUse = url
         self.com = com
         self.drv = drv
@@ -44,11 +44,12 @@ class RedditComment:
 
         self.pngPath = os.path.join(COMMENT_PNG_DIR, self.name + ".png")
         self.mp3Path = os.path.join(COMMENT_MP3_DIR, self.name + ".mp3")
-        self.finalSave = os.path.join(COMMENT_FINAL_VIDEO_DIR, self.name + ".mp4")
+        self.finalSave = os.path.join(COMMENT_FINAL_VIDEO_DIR, self.name + ".webm")
 
         self.concatFileDir = os.path.join(COMMENT_MP3_DIR, f'{self.name}.txt')
         self.concatAudioFilePath = os.path.join(COMMENT_FINAL_AUDIO_DIR, f'concat_{self.name}.mp3')
 
+        self.pollyVoice = pollyVoice
 
         self.screenShotAndMp3()
 
@@ -58,10 +59,13 @@ class RedditComment:
 
     def screenShotAndMp3(self):
         try:
-            cmt = WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.ID, self.getElmId())))
+            cmt = WebDriverWait(self.drv, self.timeout).until(EC.visibility_of_element_located((By.ID, self.getElmId())))
             self.drv.execute_script("arguments[0].scrollIntoView();", cmt)
-            WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.XPATH, f"//div[@id='{self.getElmId()}']/div[2]/div/a[@data-testid='comment_author_icon']")))
-            cmt = WebDriverWait(self.drv, 10*self.timeout).until(EC.visibility_of_element_located((By.ID, self.getElmId())))
+            # WebDriverWait(self.drv, self.timeout).until(EC.visibility_of_element_located((By.XPATH, f"//div[@id='{self.getElmId()}']/div[2]/div/a[@data-testid='comment_author_icon']")))
+            # WebDriverWait(self.drv, self.timeout).until(EC.visibility_of_element_located((By.XPATH, f"//div[@id='{self.getElmId()}']//a[@data-testid='comment_author_icon']")))
+            WebDriverWait(self.drv, self.timeout).until(EC.visibility_of_element_located((By.XPATH, f"//div[@id='{self.getElmId()}']//div[@data-testid='comment']/div/p")))
+
+            # cmt = WebDriverWait(self.drv, self.timeout).until(EC.visibility_of_element_located((By.ID, self.getElmId())))
             
         except TimeoutException:
             print("Page load timed out, will not use this comment...")
@@ -71,7 +75,14 @@ class RedditComment:
             cmt.screenshot(self.pngPath)
         
         if(self.goodToUse == True):
-            hasAudio = requestAudio(self.speechEngine, self.mp3Path, self.com.body, "Matthew")
+
+            # text_to_read = self.com.body
+
+            # print("COmment 1")
+            # print(text_to_read)
+            # print(text_to_read.split())
+
+            hasAudio = requestAudio(self.speechEngine, self.mp3Path, self.com.body, self.pollyVoice)
 
             if(hasAudio):
                 audioclip = AudioFileClip(self.mp3Path)
@@ -90,14 +101,14 @@ class RedditComment:
         if(len(replies)): # Is this right?
             child = self.com.replies[0]
             threadId = child.id
-            if(type(child)==MoreComments): # I dont deal with this case for right now...
+            if(isinstance(child, MoreComments)): # I dont deal with this case for right now...
                 isStillGoodComments = False
         else:
             isStillGoodComments = False
 
         while(isStillGoodComments):
             if(child.score/compareScore >= self.PERCENT_TO_BEAT and commentCount < self.MAX_CHILD_COMMENTS):
-                if(len(child.body.split(" ")) < self.MAX_AMOUNT_OF_WORDS):
+                if(len(child.body.split()) < self.MAX_AMOUNT_OF_WORDS):
 
                     if(commentCount == 2):
                         try:
@@ -118,7 +129,7 @@ class RedditComment:
                         else:
                             clickedContinueThread = True
 
-                    redditChildComment = RedditComment(self.speechEngine, self.drv, child, self.identifier + str(commentCount), self.urlToUse)
+                    redditChildComment = RedditComment(self.speechEngine, self.drv, child, self.identifier + str(commentCount), self.urlToUse, self.pollyVoice)
                     if(redditChildComment.goodToUse == True):
                         self.childComments.append(redditChildComment)
                         compareScore = child.score
@@ -151,7 +162,8 @@ class RedditComment:
 
     def buildVideoFrames(self):
 
-        bgBase = Image.open(BACKGROUND_FILE_DIR)
+        # bgBase = Image.open(BACKGROUND_FILE_DIR).convert("RGBA")
+        bgBase = Image.new("RGBA", (1280, 720), (0,0,0,0) )
         bgX, bgY = bgBase.size
 
         
@@ -185,7 +197,7 @@ class RedditComment:
         for idx, comment in enumerate(commentList):
             
             f1 = comment.resizeCommentImage(usedScaleFactor)
-            bgBase.paste(f1, ((bgX-f1.width)//2, math.floor((bgY-newTotalHeight)//2 + hOffset)))
+            bgBase.paste(f1, ((bgX-f1.width)//2, math.floor((bgY-newTotalHeight)//2 + hOffset)), f1.convert("RGBA"))
             comment.redditComment.commentFrameDir = os.path.join(COMMENT_PNG_FRAME_DIR, f"f{str(idx+1)}_{self.getId()}.png")
             bgBase.save(os.path.join(COMMENT_PNG_FRAME_DIR, comment.redditComment.commentFrameDir))
 

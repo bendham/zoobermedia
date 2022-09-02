@@ -1,8 +1,11 @@
 from logging import getLogRecordFactory
 import math
+from pickle import TRUE
 import subprocess
+from matplotlib.pyplot import prism
 
 from moviepy.video.VideoClip import VideoClip
+from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.editor import concatenate_videoclips
 from video.Thumbnail import Thumbnail
@@ -40,6 +43,10 @@ class VideoHandler:
         self.thumbnail.getFinalThumbs(ADD_FACE, ADD_WORDS)
         self.thumbnail.cleanUpThumbnailVideos()
 
+    def clean_up(self):
+        for vid in self.vidArray:
+            os.remove(vid.finalSave)
+
     def concat(self):
         vidList = list(map( lambda vid : os.path.join(CLIP_DIR ,vid), os.listdir(CLIP_DIR)[2:]))
 
@@ -66,11 +73,15 @@ class VideoHandler:
         moviePyVids = []
     
         for vid in vidList:
-            moviePyVids.append(VideoFileClip(vid.finalSave))
+            moviePyVids.append(VideoFileClip(vid.finalSave, has_mask=True))
             # if(vid != vidList[-1]):
             #     moviePyVids.append(VideoFileClip(CUT_FILE_DIR))
         
-        finClip = concatenate_videoclips(moviePyVids, method='compose')
+        finClip = concatenate_videoclips(moviePyVids, method='compose', bg_color=None)
+
+        if(hasOutro): # Dumb code -> this only runs when outro is active...
+            finClip = CompositeVideoClip([VideoFileClip(BACKGROUND_VIDEO),finClip])
+
         finClip.write_videofile(saveLocation)
         if(hasOutro):
             # Close and get rid of last item (the outro)
@@ -85,9 +96,12 @@ class VideoHandler:
         for idx, video in enumerate(vidList):   
             os.remove(vidList[idx].finalSave)
 
-    def concatFFmpeg(self, textDir):
-        textFileDir = textDir.replace("\\", "/")
-        subprocess.call(f"ffmpeg -hide_banner -loglevel error -f concat -safe 0 -i {textFileDir} -c copy {FINAL_SAVE}", shell=True)
+    def concatFFmpeg(self, concat_file, saveLocation):
+        print("Making concat vid..")
+        textFileDir = concat_file.replace("\\", "/")
+        subprocess.call(f"ffmpeg -hide_banner -loglevel error -f concat -safe 0 -i {textFileDir} -c copy {saveLocation}", shell=True)
+        os.remove(concat_file)
 
-        #os.remove(textDir)
+    def addBackground(self, new_file_path, new_save):
+        subprocess.call(f'ffmpeg -hide_banner -stream_loop -1 -i {BACKGROUND_VIDEO} -c:v libvpx-vp9 -i {new_file_path} -i {ZOOBER_OUTRO} -i {BACKGROUND_MUSIC} -filter_complex "[1:a][3:a]amix=inputs=2:duration=first[audOut];[1:v] [audOut] [2:v] [2:a] concat=n=2:v=1:a=1 [vTemp] [a];[0:v][vTemp]overlay=shortest=1[v]" -map "[v]" -map "[a]" {new_save}', shell=True)
     

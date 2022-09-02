@@ -38,18 +38,24 @@ REDDIT_COMMENT_READING_DIR = os.path.join(BIN_DIR, "reddit_comment_reading")
 SUB_BACKGROUND = os.path.join(REDDIT_COMMENT_READING_DIR, "background")
 
 COMMENT_PNG_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_png")
-COMMENT_PNG_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_png")
 COMMENT_PNG_FRAME_DIR = os.path.join(COMMENT_PNG_DIR, "frames")
 COMMENT_MP3_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_mp3")
 COMMENT_MP4_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "comment_mp4")
 COMMENT_FINAL_VIDEO_DIR = os.path.join(COMMENT_MP4_DIR, "final_video")
 COMMENT_FINAL_AUDIO_DIR = os.path.join(COMMENT_MP4_DIR, "final_audio")
 COMMENT_FINAL_DIR = os.path.join(COMMENT_MP4_DIR, "final")
+FINAL_SAVE_TEMP = os.path.join(COMMENT_FINAL_DIR, "funny_moments_temp.webm")
+
 CONCAT_VID_LIST_FILE = os.path.join(COMMENT_FINAL_VIDEO_DIR, "concat.txt")
+FINAL_CONCAT_VID_LIST_FILE = os.path.join(COMMENT_FINAL_DIR, "concat.txt")
+
 
 
 RESOURCES_DIR = os.path.join(REDDIT_COMMENT_READING_DIR, "resources")
-BACKGROUND_FILE_DIR = os.path.join(RESOURCES_DIR, "blank.png")
+BACKGROUND_FILE_DIR = os.path.join(RESOURCES_DIR, "transparent.png")
+TRANSITION_BACKGROUND = os.path.join(RESOURCES_DIR, "transition_background.png")
 SILENCE_FILE_DIR = os.path.join(RESOURCES_DIR, "silent075.mp3")
 CUT_FILE_DIR = os.path.join(RESOURCES_DIR, "cut75fps.mp4")
+BACKGROUND_VIDEO = os.path.join(RESOURCES_DIR, "background.mp4")
+BACKGROUND_MUSIC = os.path.join(RESOURCES_DIR, "background_music.mp3")
 FONT_FILE_DIR = os.path,join(RESOURCES_DIR, "Anson-Regular.otf")

@@ -9,6 +9,7 @@ from video.RedditCommentSubVid import RedditCommentSubVid
 from .secrets import reddit_secret, reddit_id, aws_access_key_id, aws_secret_access_key
 from settings import GECKO_DIR
 from video.VideoHandler import VideoHandler
+from Helpers import setAttemptTo
 
 
 class RedditCommentVideoInterface:
@@ -28,6 +29,13 @@ class RedditCommentVideoInterface:
     def generateVideoList(self):
         self.populateList()
         self.concat()
+        self.vidHandler.addBackground(FINAL_SAVE_TEMP, FINAL_SAVE)
+        setAttemptTo('success')
+
+    def cleanUp(self):
+
+        os.remove(FINAL_SAVE_TEMP)
+        self.vidHandler.clean_up()
 
     def populateList(self):
         # Populate array of RedditCommentSubVid
@@ -35,7 +43,7 @@ class RedditCommentVideoInterface:
             subVid = RedditCommentSubVid(id, self.polly, self.redditInstance)
             subVid.generateVideoList()
 
-            vidObj = SimpleNamespace(finalSave=subVid.introVidPath)
+            vidObj = SimpleNamespace(finalSave=subVid.introVidPath, name=subVid.introVidName)
             self.vidHandler.addVid(vidObj)
             self.vidHandler.addVid(subVid)
 
@@ -44,6 +52,14 @@ class RedditCommentVideoInterface:
         self.vidHandler.addVid(vidObj)
         return self.vidHandler.vidArray
 
-    def concat(self):
-        self.vidHandler.concatVidList(self.buildConcatList(), FINAL_SAVE, hasOutro=True)
+    def buildConcatText(self):
+        with open(FINAL_CONCAT_VID_LIST_FILE, 'w') as f:
+            for vid in self.vidHandler.vidArray:
+                f.write(f"file '{vid.name}'\n")
 
+    def concat(self):
+        self.buildConcatText()
+        self.vidHandler.concatFFmpeg(FINAL_CONCAT_VID_LIST_FILE, FINAL_SAVE_TEMP)
+        # self.vidHandler.concatVidList(self.buildConcatList(), FINAL_SAVE, hasOutro=True)
+
+    

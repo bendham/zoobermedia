@@ -1,6 +1,24 @@
 {
- "current-video": {
-  "sub": "contagiouslaughter",
-  "number": 156
- }
+  "day": 1,
+  "attempt": "fail",
+  "video": "watchpeopledieinside",
+  "content": {
+    "contagiouslaughter": {
+      "meta": "contagiouslaughter",
+      "number": 1
+    },
+    "watchpeopledieinside": {
+      "meta": "watchpeopledieinside",
+      "number": 1
+    },
+    "redditcomment": {
+      "meta": [
+        ["sn0dml", "snri8v", "sn3qsx"],
+        ["kka536", "hvbvpz", "uncedt"],
+        ["uekr48"]
+      ],
+      "old": [],
+      "number": 1
+    }
+  }
 }

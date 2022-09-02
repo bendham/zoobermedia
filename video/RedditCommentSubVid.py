@@ -17,6 +17,8 @@ import textwrap
 from video.Helpers import requestAudio, turnPictureIntoVideo
 from moviepy.editor import AudioFileClip
 from bing_image_downloader import downloader
+from praw.models import MoreComments
+
 
 
 
@@ -31,12 +33,14 @@ class RedditCommentSubVid:
         self.kw_extrator = yake.KeywordExtractor(lan="en", top=1 )
 
         self.subId = subId
-        self.finalSave = os.path.join(COMMENT_FINAL_DIR, f"subVid_{subId}.mp4")
+        self.finalSave = os.path.join(COMMENT_FINAL_DIR, f"subVid_{subId}.webm")
+        self.name = f"subVid_{subId}.webm"
         
         self.introVidAudioPath = os.path.join(COMMENT_PNG_DIR, self.subId + ".mp3")
-        self.introVidPath = os.path.join(COMMENT_PNG_DIR, self.subId + ".mp4")
+        self.introVidPath = os.path.join(COMMENT_FINAL_DIR, self.subId + "_intro.webm")
         self.introPngPath = os.path.join(COMMENT_PNG_DIR, self.subId + ".png")
         self.introVidDur = 0
+        self.introVidName = self.subId + "_intro.webm"
 
         self.pollySession = pollySession
         self.prawSession = prawSession
@@ -64,20 +68,22 @@ class RedditCommentSubVid:
         print(f"Making intro!")
         title = subMis.title
 
-        query_string = self.kw_extrator.extract_keywords(title)[0][0]
-        downloader.download(query_string, limit=1,  output_dir=SUB_BACKGROUND, adult_filter_off=False, force_replace=False, timeout=60, verbose=False, filter="photo")
+        # query_string = self.kw_extrator.extract_keywords(title)[0][0]
+        # downloader.download(query_string, limit=1,  output_dir=SUB_BACKGROUND, adult_filter_off=False, force_replace=False, timeout=60, verbose=False, filter="photo")
 
-        downloadDir = os.path.join(SUB_BACKGROUND, query_string)
-        downloading = True
-        while(downloading):
-            dirList = os.listdir(downloadDir)
-            if(len(dirList) > 0):
-                downloading = False
-                background = os.path.join(downloadDir, dirList[0])
+        # downloadDir = os.path.join(SUB_BACKGROUND, query_string)
+        # downloading = True
+        # while(downloading):
+        #     dirList = os.listdir(downloadDir)
+        #     if(len(dirList) > 0):
+        #         downloading = False
+        #         background = os.path.join(downloadDir, dirList[0])
         
         # Thanks 
         # https://www.alpharithms.com/fit-custom-font-wrapped-text-image-python-pillow-552321/
         # For the great code
+
+        background = TRANSITION_BACKGROUND
 
         bgBase = Image.open(background)
         bgBase.convert("RGB")
@@ -87,15 +93,18 @@ class RedditCommentSubVid:
 
         
 
-        font = ImageFont.truetype(font="Anson-Regular.otf", size=72)
+        font = ImageFont.truetype(font="Poppins-Bold.ttf", size=50)
 
         draw = ImageDraw.Draw(im=bgBase)
 
         avg_char_width = sum(font.getsize(char)[0] for char in ascii_letters) / len(ascii_letters)
         max_char_count = int(bgBase.size[0] * .90 / avg_char_width)
 
-        text = textwrap.fill(text=title, width=max_char_count)
-        draw.text(xy=(bgBase.size[0]//2, bgBase.size[1]//2), text=text, font=font, fill=(255, 255, 255), anchor='mm', stroke_fill=(0, 0, 0), stroke_width=2)
+        text_wrapped = textwrap.wrap(text=title, width=max_char_count) # used to be fill
+
+        text_wrapped = "\n".join(line.center(max_char_count) for line in text_wrapped)
+
+        draw.text(xy=(bgBase.size[0]//2, bgBase.size[1]//2), text=text_wrapped, font=font, fill=(255, 255, 255), anchor='mm', stroke_fill=(0, 0, 0), stroke_width=2, align="center")
         bgBase.save(self.introPngPath)
 
         goodAudio = requestAudio(self.pollySession, self.introVidAudioPath, title, "Joanna")
@@ -107,27 +116,39 @@ class RedditCommentSubVid:
 
             self.removeTempIntroThings()
 
-        os.remove(background)
-        os.rmdir(downloadDir)
+        # os.remove(background)
+        # os.rmdir(downloadDir)
 
     def removeTempIntroThings(self):
         os.remove(self.introPngPath)
         os.remove(self.introVidAudioPath)
 
     def populateList(self, subMis):
+        
+        def toggle_voice(voice):
+            if(voice == "Brian"):
+                return "Matthew"
+            else:
+                return "Brian"
 
         drv = self.setUpRedditPage(subMis)
 
+        voice = "Matthew"
         for idx, comment in enumerate(subMis.comments[1:self.NUMBER_OF_SECTIONS]):
-            cmt = RedditComment(self.pollySession, drv, comment, idx+1, self.cmtsUrl)
+            if(not isinstance(comment, MoreComments)):
+                cmt = RedditComment(self.pollySession, drv, comment, idx+1, self.cmtsUrl, voice)
 
-            if(len(comment.body.split(" ")) < cmt.MAX_AMOUNT_OF_WORDS): # Check for parent comment to be reasonable in length
-                print("Generating details for comment clip!")
-                cmt.populateChildComments()
-                cmt.buildVideoFrames()
+                if(len(comment.body.split(" ")) < cmt.MAX_AMOUNT_OF_WORDS): # Check for parent comment to be reasonable in length
+                    print("Generating details for comment clip!")
+                    
+                
+                    cmt.populateChildComments()
+                    cmt.buildVideoFrames()
 
-                if(cmt.goodToUse):
-                    self.comments.append(cmt)
+                    voice = toggle_voice(voice)
+
+                    if(cmt.goodToUse):
+                        self.comments.append(cmt)
 
         drv.quit()
 
@@ -140,11 +161,11 @@ class RedditCommentSubVid:
         self.processAudio()
         # Process video and get rid of temp files
         self.processVideoAndCleanUp()
-        # Cleanup
-        self.cleanUp()
         # Combine in one
         self.concat()
-
+        # Cleanup
+        self.cleanUp()
+            
     def cleanUp(self):
         for comment in self.comments:
             self.cleanupCommentFiles(comment)
@@ -219,14 +240,16 @@ class RedditCommentSubVid:
     
     def buildConcatText(self):
         with open(CONCAT_VID_LIST_FILE, 'w') as f:
+            curDir = CUT_FILE_DIR.replace("\\", "/")
             for comment in self.comments:
-                f.write(f"file '{comment.name}.mp4'\n")
+                f.write(f"file '{comment.name}.webm'\n")
                 if(comment != self.comments[-1]):
-                    f.write(f"file cut75fps.mp4\n")
+                    ""
+                    # f.write(f"file 'cut75fps.mp4'\n")
 
     def concat(self):
-
-        self.vidHandler.concatVidList(self.comments, self.finalSave)
+        self.buildConcatText()
+        self.vidHandler.concatFFmpeg(CONCAT_VID_LIST_FILE, self.finalSave)
 
     def setUpRedditPage(self, subMission: Submission):
 
