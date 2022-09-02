@@ -2,7 +2,7 @@ import praw
 from .RedditVideo import RedditVideo
 from .VideoHandler import VideoHandler
 import requests
-from secrets import reddit_secret, reddit_id
+from .secrets import reddit_secret, reddit_id
 from settings import *
 import subprocess
 from Helpers import setAttemptTo
