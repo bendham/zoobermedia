@@ -9,7 +9,7 @@ from video.RedditCommentSubVid import RedditCommentSubVid
 from .secrets import reddit_secret, reddit_id, aws_access_key_id, aws_secret_access_key
 from settings import GECKO_DIR
 from video.VideoHandler import VideoHandler
-from Helpers import setAttemptTo
+from .Helpers import setAttemptTo
 
 
 class RedditCommentVideoInterface:

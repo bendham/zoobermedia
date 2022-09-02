@@ -5,7 +5,7 @@ import requests
 from .secrets import reddit_secret, reddit_id
 from settings import *
 import subprocess
-from Helpers import setAttemptTo
+from .Helpers import setAttemptTo
 
 
 class RedditVideoInterface:
