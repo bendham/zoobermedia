@@ -71,7 +71,8 @@ VALID_PRIVACY_STATUSES = ("public", "private", "unlisted")
 
 
 def get_authenticated_service(args):
-  flow = flow_from_clientsecrets(CLIENT_SECRETS_FILE,
+  flow = flow_from_clientsecrets(os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                   CLIENT_SECRETS_FILE)),
     scope=YOUTUBE_UPLOAD_SCOPE,
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 
@@ -191,11 +192,14 @@ def uploadVideo():
     default=VALID_PRIVACY_STATUSES[2], help="Video privacy status.")
   args = argparser.parse_args()
 
+  args.noauth_local_webserver = True # Set to True as no local web server
+
   if not os.path.exists(args.file):
     exit("Please specify a valid file using the --file= parameter.")
 
   youtube = get_authenticated_service(args)
   try:
+    print("Starting upload!")
     initialize_upload(youtube, args)
   except HttpError as e:
     print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
