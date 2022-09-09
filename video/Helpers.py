@@ -45,7 +45,8 @@ def deleteDirectory(directory, exclude=[]):
                     files.remove(file)
 
     for file in files:
-        os.remove(os.path.join(directory, file))
+        if os.path.isfile(file):
+            os.remove(os.path.join(directory, file))
 
 
 def cleanUpFiles():
@@ -55,10 +56,10 @@ def cleanUpFiles():
     deleteDirectory(COMMENT_FINAL_VIDEO_DIR)
     deleteDirectory(COMMENT_FINAL_AUDIO_DIR)
     deleteDirectory(COMMENT_FINAL_DIR)
-    deleteDirectory(COMMENT_PNG_DIR, ['frames'])
+    deleteDirectory(COMMENT_PNG_DIR)
     deleteDirectory(COMMENT_PNG_FRAME_DIR)
 
-    deleteDirectory(CLIP_DIR, ["video" , "audio"])
+    deleteDirectory(CLIP_DIR)
     deleteDirectory(CLIP_VIDEO_DIR)
     deleteDirectory(CLIP_AUDIO_DIR)
 
