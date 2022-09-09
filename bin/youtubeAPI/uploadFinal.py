@@ -192,7 +192,7 @@ def uploadVideo():
     default=VALID_PRIVACY_STATUSES[2], help="Video privacy status.")
   args = argparser.parse_args()
 
-  args.noauth_local_webserver = True # Set to True as no local web server
+  # args.noauth_local_webserver = True # Set to True as no local web server
 
   if not os.path.exists(args.file):
     exit("Please specify a valid file using the --file= parameter.")
