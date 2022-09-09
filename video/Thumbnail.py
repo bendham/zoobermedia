@@ -31,11 +31,12 @@ class Thumbnail:
 
         if(withWord):
             with open(UPLOAD_INFO_FILE_DIR) as uploadInfo:
-                currentVideoDetails = json.load(uploadInfo)['current-video']
+                file = json.load(uploadInfo)
+                currentVideo = file['video']
 
-            wordDir = os.path.join(THUMBNAIL_WORDS_DIR, currentVideoDetails['sub'])
+            wordDir = os.path.join(THUMBNAIL_WORDS_DIR, file[currentVideo]['meta'])
 
-            wordDetails = {'choice':self.pickPath(wordDir),'number':currentVideoDetails['number']}
+            wordDetails = {'choice':self.pickPath(wordDir),'number': file[currentVideo]['number']}
 
         if(withFace):
             faceChoice = self.pickPath(THUMBNAIL_FACES_DIR, wordDetails)

@@ -58,6 +58,12 @@ def cleanUpFiles():
     deleteDirectory(COMMENT_PNG_DIR, ['frames'])
     deleteDirectory(COMMENT_PNG_FRAME_DIR)
 
+    deleteDirectory(CLIP_DIR, ["video" , "audio"])
+    deleteDirectory(CLIP_VIDEO_DIR)
+    deleteDirectory(CLIP_AUDIO_DIR)
+
+
+
 def updateVideoDeatils():
 
     with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
