@@ -36,7 +36,8 @@ def turnPictureIntoVideo(picDir, audDir, dur, saveDir):
     subprocess.call(ffmpegCommand, shell=True)
 
 def deleteDirectory(directory, exclude=[]):
-    files = [f for f in os.listdir(directory)]
+    print(directory)
+    files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 
     if len(exclude) >= 1:
         for exc in exclude:
@@ -45,8 +46,8 @@ def deleteDirectory(directory, exclude=[]):
                     files.remove(file)
 
     for file in files:
-        if os.path.isfile(file):
-            os.remove(os.path.join(directory, file))
+        print(file)
+        os.remove(os.path.join(directory, file))
 
 
 def cleanUpFiles():
