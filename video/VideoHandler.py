@@ -48,7 +48,8 @@ class VideoHandler:
             os.remove(vid.finalSave)
 
     def concat(self):
-        vidList = list(map( lambda vid : os.path.join(CLIP_DIR ,vid), os.listdir(CLIP_DIR)[2:]))
+        vidList = [os.path.join(CLIP_DIR, vid) for vid in os.listdir(CLIP_DIR) if os.path.isfile(os.path.join(CLIP_DIR, vid))]
+        # vidList = list(map( lambda vid : os.path.join(CLIP_DIR ,vid), os.listdir(CLIP_DIR)[2:]))
 
         moviePyVids = []
     
