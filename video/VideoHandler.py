@@ -37,7 +37,10 @@ class VideoHandler:
     def removeFile(self, fileDirArray):
             for fileDir in fileDirArray:
                 if(fileDir not in self.thumbnail.vidsForThumbnail):
-                    os.remove(fileDir)
+                    try:
+                        os.remove(fileDir)
+                    except:
+                        print(f"Could not remove file {fileDir}...skipping")
     
     def getThumbnail(self, ADD_FACE, ADD_WORDS):
         self.thumbnail.getFinalThumbs(ADD_FACE, ADD_WORDS)

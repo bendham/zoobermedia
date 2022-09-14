@@ -47,7 +47,10 @@ def deleteDirectory(directory, exclude=[]):
 
     for file in files:
         print(file)
-        os.remove(os.path.join(directory, file))
+        try:
+            os.remove(os.path.join(directory, file))
+        except:
+            print(f"Could not remove {os.path.join(directory, file)}...skipping")
 
 
 def cleanUpFiles():
