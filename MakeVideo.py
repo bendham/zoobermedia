@@ -1,11 +1,14 @@
 from video.RedditVideoInterface import RedditVideoInterface
 from video.RedditCommentVideoInterface import RedditCommentVideoInterface
-
+import os
+import sys
 from settings import *
 from video.Helpers import *
 from bin.youtubeAPI.uploadFinal import uploadVideo
 
 if __name__ == "__main__":
+
+    os.chdir(os.path.dirname(sys.argv[0]))
 
     print("Generating new compilation...\n")
 
