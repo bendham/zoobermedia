@@ -1,8 +1,11 @@
 from ntpath import join
 import os
+import sys
+
 
 GECKO_DIR = r"C:\Users\bendh\geckodriver-v0.30.0-win64\geckodriver.exe"
 
+os.chdir(os.path.dirname(sys.argv[0]))
 CW_DIR = os.getcwd()
 BIN_DIR = os.path.join(os.getcwd(), "bin")
 
