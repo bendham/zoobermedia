@@ -154,3 +154,7 @@ def getSubIds():
             return usableSubids
         else:
             return None
+def getMaxVideoNum():
+    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
+        videoDetails = json.load(vidFile)
+        return videoDetails['maxVids']

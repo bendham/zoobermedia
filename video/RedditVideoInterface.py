@@ -11,9 +11,9 @@ from .Helpers import setAttemptTo
 class RedditVideoInterface:
 
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    MAX_VIDEOS = 25
+    
 
-    def __init__(self, subredditString):
+    def __init__(self, subredditString, maxVids):
 
         self.redditInstance = praw.Reddit(client_id=reddit_id, client_secret=reddit_secret, user_agent='my user agent')
 
@@ -23,6 +23,7 @@ class RedditVideoInterface:
         self.sub = self.setSub(subredditString)
 
         self.vidHandler = VideoHandler()
+        self.MAX_VIDEOS = maxVids
 
     def setSub(self, subreddit):
        return self.redditInstance.subreddit(subreddit)

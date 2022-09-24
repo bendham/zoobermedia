@@ -31,9 +31,9 @@ if __name__ == "__main__":
                 cleanUpFiles()
 
                 if videoToMake == "contagiouslaughter":
-                    newCompilation = RedditVideoInterface("contagiouslaughter")
+                    newCompilation = RedditVideoInterface("contagiouslaughter", getMaxVideoNum())
                 elif videoToMake == "watchpeopledieinside":
-                    newCompilation = RedditVideoInterface("watchpeopledieinside")
+                    newCompilation = RedditVideoInterface("watchpeopledieinside", getMaxVideoNum())
                 elif videoToMake == "redditcomment":
 
                     subids = getSubIds()
@@ -53,8 +53,11 @@ if __name__ == "__main__":
             ""
         else: # RedditCommentVideoInterface
             updateSubIds() 
+        try:
+            isUploadGood = uploadVideo()
+        except(Exception):
+            print("Could not upload!")
 
-        isUploadGood = uploadVideo()
 
         if isUploadGood:
             updateVideoDeatils()
