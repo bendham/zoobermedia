@@ -110,7 +110,7 @@ class RedditVideoInterface:
             subprocess.call(f'ffmpeg-normalize {vid.audioFileDir} -o {vid.normAudioFileDir}', shell=True)
 
             # Combine Video and Audio, and add a blurred background
-            subprocess.call(f'ffmpeg -i {vid.videoFileDir} -i {vid.normAudioFileDir} -i {WATERMARK_FILE_DIR} -filter_complex "[0]scale=1280:720,setsar=1:1,boxblur=10[bg];[0]scale=-1:720,setsar=16:9[main];[bg][main]overlay=(W-w)/2:(H-h)/2[markit];[markit][2] overlay" {vid.combinedFileDir}', shell=True)
+            subprocess.call(f'ffmpeg -hide_banner -loglevel error -i {vid.videoFileDir} -i {vid.normAudioFileDir} -i {WATERMARK_FILE_DIR} -filter_complex "[0]scale=1280:720,setsar=1:1,boxblur=10[bg];[0]scale=-1:720,setsar=16:9[main];[bg][main]overlay=(W-w)/2:(H-h)/2[markit];[markit][2] overlay" {vid.combinedFileDir}', shell=True)
 
             self.vidHandler.removeFile([vid.videoFileDir, vid.audioFileDir, vid.normAudioFileDir])
         else:
