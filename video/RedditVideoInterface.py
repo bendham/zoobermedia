@@ -121,6 +121,7 @@ class RedditVideoInterface:
         self.vidHandler.getThumbnail(True, True)
 
     def concat(self):
+        print(f"Concatenating...\n")
         self.vidHandler.concat()
 
 

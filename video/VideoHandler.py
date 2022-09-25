@@ -1,3 +1,4 @@
+from asyncio.log import logger
 from logging import getLogRecordFactory
 import math
 from pickle import TRUE
@@ -62,7 +63,7 @@ class VideoHandler:
         moviePyVids.append(VideoFileClip(ZOOBER_OUTRO))
         
         finClip = concatenate_videoclips(moviePyVids, method='compose')
-        finClip.write_videofile(FINAL_SAVE)
+        finClip.write_videofile(FINAL_SAVE, logger=None)
         
         # Close and get rid of last item (the outro)
         moviePyVids[-1].reader.close()
@@ -86,7 +87,7 @@ class VideoHandler:
         if(hasOutro): # Dumb code -> this only runs when outro is active...
             finClip = CompositeVideoClip([VideoFileClip(BACKGROUND_VIDEO),finClip])
 
-        finClip.write_videofile(saveLocation)
+        finClip.write_videofile(saveLocation, logger=None)
         if(hasOutro):
             # Close and get rid of last item (the outro)
             moviePyVids[-1].reader.close()

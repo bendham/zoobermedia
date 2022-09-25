@@ -17,10 +17,10 @@ if __name__ == "__main__":
         videoToMake = "contagiouslaughter"
     elif day == 0 or day == 3:
         videoToMake = "watchpeopledieinside"
-    elif day == 2:
-        videoToMake = "redditcomment"
     else:
         videoToMake = "nothing"
+
+    # TODO: Add option for reddit comment
 
     setVideoToMake(videoToMake)
 
