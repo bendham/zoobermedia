@@ -4,6 +4,37 @@ import subprocess
 import os
 from settings import *
 import json
+from pymongo import MongoClient
+from video.secrets import mongo_string
+from video.VideoDataModel import VideoModel
+
+
+def getDBData():
+    client: MongoClient = MongoClient(mongo_string)
+
+    db = client['zoobermedia']
+    return db['datas'].find_one()
+
+def updateDBData(data):
+    client: MongoClient = MongoClient(mongo_string)
+    db = client['zoobermedia']
+    db['datas'].replace_one({'zooberType': 'main'}, data)
+
+def updateThumbnailArrayLinks(data):
+    urlString = "http://localhost:3000/images/"
+
+    images = [f for f in os.listdir(THUMBNAIL_SAVE_DIR) if os.isfile(join(THUMBNAIL_SAVE_DIR, f))]
+
+    imList = []
+    if images:
+        for im in images:
+            imList.append(urlString + im)
+
+        data['thumbnails'] = imList
+    else:
+        data['thumbnails'] = [DEFAULT_THUMBNAIL_FOR_CLIENT, DEFAULT_THUMBNAIL_FOR_CLIENT, DEFAULT_THUMBNAIL_FOR_CLIENT]
+
+
 
 def requestAudio(speechEngine, savePath, message, voice_to_use) -> bool:
         try:
@@ -53,108 +84,28 @@ def deleteDirectory(directory, exclude=[]):
             print(f"Could not remove {os.path.join(directory, file)}...skipping")
 
 
-def cleanUpFiles():
-    deleteDirectory(THUMBNAIL_SAVE_DIR)
-    deleteDirectory(FINAL_DIR)
-    deleteDirectory(COMMENT_MP3_DIR, ["silent075"])
-    deleteDirectory(COMMENT_FINAL_VIDEO_DIR)
-    deleteDirectory(COMMENT_FINAL_AUDIO_DIR)
-    deleteDirectory(COMMENT_FINAL_DIR)
-    deleteDirectory(COMMENT_PNG_DIR)
-    deleteDirectory(COMMENT_PNG_FRAME_DIR)
+def cleanUpFiles(self):
+    self.deleteDirectory(THUMBNAIL_SAVE_DIR)
+    self.deleteDirectory(FINAL_DIR)
+    self.deleteDirectory(COMMENT_MP3_DIR, ["silent075"])
+    self.deleteDirectory(COMMENT_FINAL_VIDEO_DIR)
+    self.deleteDirectory(COMMENT_FINAL_AUDIO_DIR)
+    self.deleteDirectory(COMMENT_FINAL_DIR)
+    self.deleteDirectory(COMMENT_PNG_DIR)
+    self.deleteDirectory(COMMENT_PNG_FRAME_DIR)
 
-    deleteDirectory(CLIP_DIR)
-    deleteDirectory(CLIP_VIDEO_DIR)
-    deleteDirectory(CLIP_AUDIO_DIR)
+    self.deleteDirectory(CLIP_DIR)
+    self.deleteDirectory(CLIP_VIDEO_DIR)
+    self.deleteDirectory(CLIP_AUDIO_DIR)
 
 
+def incrementEpisodeNumber(video: VideoModel):
+    video['videoNumber'] += 1
 
-def updateVideoDeatils():
+def readDay(video_data):
+    return video_data['currentDay']
 
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        videoDetails['content'][videoDetails['video']]['number'] = videoDetails['content'][videoDetails['video']]['number'] + 1
+def addDay(video_data):
+    video_data['currentDay'] += 1
 
-        vidFile.seek(0)
-        vidFile.truncate()
 
-        json.dump(videoDetails, vidFile, indent=1)
-
-def isVideoSuccess():
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        attempt = json.load(vidFile)['attempt']
-
-    if attempt == 'success':
-        return True
-    else:
-        return False
-
-def setVideoToMake(update):
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        videoDetails['video'] = update
-
-        vidFile.seek(0)
-        vidFile.truncate()
-
-        json.dump(videoDetails, vidFile, indent=1)
-
-def setAttemptTo(update):
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        videoDetails['attempt'] = update
-
-        vidFile.seek(0)
-        vidFile.truncate()
-
-        json.dump(videoDetails, vidFile, indent=1)
-
-def readDay():
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-           return json.load(vidFile)['day']
-
-def addDay():
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        videoDetails['day'] = (videoDetails['day'] + 1) % 7
-
-        vidFile.seek(0)
-        vidFile.truncate()
-
-        json.dump(videoDetails, vidFile, indent=1)
-
-def updateSubIds():
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        listOfSubids = videoDetails['content']['redditcomment']['meta']
-        oldSubids = videoDetails['content']['redditcomment']['old']
-
-        if len(listOfSubids) >= 1:
-            usableSubids = listOfSubids[0]
-            oldSubids.append(usableSubids)
-
-            videoDetails['content']['redditcomment']['meta'] = listOfSubids[1:]
-            videoDetails['content']['redditcomment']['old'] = oldSubids
-
-            vidFile.seek(0)
-            vidFile.truncate()
-
-            json.dump(videoDetails, vidFile, indent=1)
-
-            return usableSubids
-        else:
-            return None
-
-def getSubIds():
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        listOfSubids = videoDetails['content']['redditcomment']['meta']
-        if len(listOfSubids) >= 1:
-            usableSubids = listOfSubids[0]
-            return usableSubids
-        else:
-            return None
-def getMaxVideoNum():
-    with open(UPLOAD_INFO_FILE_DIR, 'r+') as vidFile:
-        videoDetails = json.load(vidFile)
-        return videoDetails['maxVids']

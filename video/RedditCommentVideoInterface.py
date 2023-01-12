@@ -9,12 +9,11 @@ from video.RedditCommentSubVid import RedditCommentSubVid
 from .secrets import reddit_secret, reddit_id, aws_access_key_id, aws_secret_access_key
 from settings import GECKO_DIR
 from video.VideoHandler import VideoHandler
-from .Helpers import setAttemptTo
 
 
 class RedditCommentVideoInterface:
 
-    def __init__(self, subIdArray):
+    def __init__(self, subIdArray, sectionsPerSub):
 
         self.redditInstance = praw.Reddit(client_id=reddit_id, client_secret=reddit_secret, user_agent='my user agent')
 
@@ -22,6 +21,7 @@ class RedditCommentVideoInterface:
         self.polly = self.session.client("polly")
 
         self.subIdArray = subIdArray
+        self.sectionsPerSub = sectionsPerSub
 
         self.vidHandler = VideoHandler()
 
@@ -30,7 +30,7 @@ class RedditCommentVideoInterface:
         self.populateList()
         self.concat()
         self.vidHandler.addBackground(FINAL_SAVE_TEMP, FINAL_SAVE)
-        setAttemptTo('success')
+        # setAttemptTo('success')
 
     def cleanUp(self):
 
@@ -40,7 +40,7 @@ class RedditCommentVideoInterface:
     def populateList(self):
         # Populate array of RedditCommentSubVid
         for id in self.subIdArray:
-            subVid = RedditCommentSubVid(id, self.polly, self.redditInstance)
+            subVid = RedditCommentSubVid(id, self.polly, self.redditInstance, self.sectionsPerSub)
             subVid.generateVideoList()
 
             vidObj = SimpleNamespace(finalSave=subVid.introVidPath, name=subVid.introVidName)

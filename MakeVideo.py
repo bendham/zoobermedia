@@ -6,67 +6,38 @@ from bin.youtubeAPI.uploadFinal import uploadVideo
 
 if __name__ == "__main__":
 
-    
-
     print("Generating new compilation...\n")
 
-    day = readDay()
-    videoToMake = ""
+    video_creation_data = getDBData()
 
-    if day == 1 or day == 4: 
-        videoToMake = "contagiouslaughter"
-    elif day == 0 or day == 3:
-        videoToMake = "watchpeopledieinside"
-    else:
-        videoToMake = "nothing"
+    current_day = readDay(video_creation_data)
+    video_to_make_info = video_creation_data['videos'][current_day]
 
-    # TODO: Add option for reddit comment
+    if video_to_make_info['isMakingVideo']:
+        # Will be making a video
+        if video_to_make_info['iscomment']:
+            # Comment Video
+            new_video_interface = RedditCommentVideoInterface(video_to_make_info['subreddit'], video_to_make_info['commentSubreddits'])
 
-    setVideoToMake(videoToMake)
+        else:
+            # Normal video (does not include twitch videos)
+            new_video_interface = RedditVideoInterface(video_to_make_info['subreddit'], video_to_make_info['numberOfClips'])
 
-    if videoToMake != "nothing":
-        for i in range(0, 3):
-            if not isVideoSuccess():
-                print(f"Attempt {i}")
-                cleanUpFiles()
+        cleanUpFiles()
+        new_video_interface.generateVideoList()
 
-                if videoToMake == "contagiouslaughter":
-                    newCompilation = RedditVideoInterface("contagiouslaughter", getMaxVideoNum())
-                elif videoToMake == "watchpeopledieinside":
-                    newCompilation = RedditVideoInterface("watchpeopledieinside", getMaxVideoNum())
-                elif videoToMake == "redditcomment":
-
-                    subids = getSubIds()
-                    newCompilation = RedditCommentVideoInterface(subids)
-                else:
-                    print("Couldnt find videoToMake!")
-                    newCompilation = None
-                
-                if newCompilation:
-                    print("Making new Compilation")
-                    newCompilation.generateVideoList()
-
-    if isVideoSuccess():
-        if videoToMake == "contagiouslaughter":
-            ""
-        elif videoToMake == "watchpeopledieinside":
-            ""
-        else: # RedditCommentVideoInterface
-            updateSubIds() 
+        # For now, assume the video was a success
         try:
-            isUploadGood = uploadVideo()
+            uploadVideo()
+
+            incrementEpisodeNumber(video_to_make_info)
+            video_creation_data['videos'][current_day] = video_to_make_info
+            addDay(video_creation_data)
+            updateThumbnailArrayLinks(video_creation_data)
+
+
+            updateDBData(video_creation_data)
         except(Exception):
             print("Could not upload!")
-
-
-        if isUploadGood:
-            updateVideoDeatils()
-            addDay()
-            setAttemptTo('fail')
-        else:
-            print("Upload faild!")
-    else:
-        print("Video could not be made!")
-    
     
     

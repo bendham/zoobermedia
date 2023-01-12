@@ -29,20 +29,19 @@ class Thumbnail:
         faceChoice = None    
         wordDetails = None
 
-        if(withWord):
-            with open(UPLOAD_INFO_FILE_DIR) as uploadInfo:
-                file = json.load(uploadInfo)
-                currentVideo = file['video']
-
-            wordDir = os.path.join(THUMBNAIL_WORDS_DIR, file["content"][currentVideo]['meta'])
-
-            wordDetails = {'choice':self.pickPath(wordDir),'number': file["content"][currentVideo]['number']}
-
-        if(withFace):
-            faceChoice = self.pickPath(THUMBNAIL_FACES_DIR, wordDetails)
-
-        
         for idx,videoThumbnailDir in enumerate(self.thumbnailPathArray):
+            if(withWord):
+                with open(UPLOAD_INFO_FILE_DIR) as uploadInfo:
+                    file = json.load(uploadInfo)
+                    currentVideo = file['video']
+
+                wordDir = os.path.join(THUMBNAIL_WORDS_DIR, file["content"][currentVideo]['meta'])
+
+                wordDetails = {'choice':self.pickPath(wordDir),'number': file["content"][currentVideo]['number']}
+
+            if(withFace):
+                faceChoice = self.pickPath(THUMBNAIL_FACES_DIR, wordDetails)
+
             self.produceThumbnail(videoThumbnailDir, idx+1,wordDetails, faceChoice)
 
             

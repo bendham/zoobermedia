@@ -25,10 +25,9 @@ from praw.models import MoreComments
 class RedditCommentSubVid:
 
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
-    NUMBER_OF_SECTIONS = 10
     SILENCE_TIME = 0.75 # 0.75 s pause between comment reading
 
-    def __init__(self, subId, pollySession, prawSession) -> None:
+    def __init__(self, subId, pollySession, prawSession, sectionsPerSub=10) -> None:
         
         self.kw_extrator = yake.KeywordExtractor(lan="en", top=1 )
 
@@ -41,6 +40,7 @@ class RedditCommentSubVid:
         self.introPngPath = os.path.join(COMMENT_PNG_DIR, self.subId + ".png")
         self.introVidDur = 0
         self.introVidName = self.subId + "_intro.webm"
+        self.sectionsPerSub = sectionsPerSub
 
         self.pollySession = pollySession
         self.prawSession = prawSession

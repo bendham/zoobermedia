@@ -5,8 +5,6 @@ import requests
 from .secrets import reddit_secret, reddit_id
 from settings import *
 import subprocess
-from .Helpers import setAttemptTo
-
 
 class RedditVideoInterface:
 
@@ -35,8 +33,6 @@ class RedditVideoInterface:
         self.processVideos()
         self.getThumbnail()
         self.concat()
-
-        setAttemptTo('success')
 
     def populateList(self):
         vidNumber = 1
@@ -86,7 +82,8 @@ class RedditVideoInterface:
         for vid in self.vidHandler.vidArray:
 
             self.downloadVid(vid)
-            self.processVidAndRemove(vid)            
+            self.processVidAndRemove(vid)
+
 
     def downloadVid(self, vid):
         print(f"Downloading video #{vid.vidNum}...\n")

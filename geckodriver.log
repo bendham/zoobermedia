@@ -4916,3 +4916,7 @@ JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 718: Error: Pha
 
 ###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
 
+1664064842383	geckodriver	INFO	Listening on 127.0.0.1:61944
+1664064845442	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--headless" "--remote-debugging-port" "61945" "-no-remote" "-profile" "C:\\Users\\bendh\\AppData\\Local\\Temp\\rust_mozprofileuLTKxI"
+*** You are running in headless mode.
+1664064845813	Marionette	INFO	Marionette enabled
