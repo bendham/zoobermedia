@@ -1,6 +1,6 @@
 # Zoober Media
 
-An automatic video generation tool used to produce video for the wonderful YouTube channel [Zoober Media](https://www.youtube.com/zoobermedia).
+An automatic video generation tool used to produce video for the wonderful YouTube channel [Zoober Media](https://www.youtube.com/zoobermedia). Newly added is a back-end to serve an admin client via a management console.
 
 ## Disclaimer
 
