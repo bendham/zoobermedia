@@ -87,7 +87,6 @@ def deleteDirectory(directory, exclude=[]):
 def cleanUpFiles():
     print("Cleaning files...")
 
-    deleteDirectory(THUMBNAIL_SAVE_DIR)
     deleteDirectory(FINAL_DIR)
     deleteDirectory(COMMENT_MP3_DIR, ["silent075"])
     deleteDirectory(COMMENT_FINAL_VIDEO_DIR)

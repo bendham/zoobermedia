@@ -23,8 +23,8 @@ if __name__ == "__main__":
             # Normal video (does not include twitch videos)
             new_video_interface = RedditVideoInterface(video_to_make_info)
 
-        # Clean before incase there was an exception last run in the below block
-        cleanUpFiles()
+        # Clean thubnails, as now they are not needed with a new video being made
+        deleteDirectory(THUMBNAIL_SAVE_DIR)
 
 
         new_video_interface.generateVideoList()
