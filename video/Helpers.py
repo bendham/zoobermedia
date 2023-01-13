@@ -23,7 +23,7 @@ def updateDBData(data):
 def updateThumbnailArrayLinks(data):
     urlString = "http://localhost:3000/images/"
 
-    images = [f for f in os.listdir(THUMBNAIL_SAVE_DIR) if os.isfile(join(THUMBNAIL_SAVE_DIR, f))]
+    images = [f for f in os.listdir(THUMBNAIL_SAVE_DIR) if os.path.isfile(os.path.join(THUMBNAIL_SAVE_DIR, f))]
 
     imList = []
     if images:
@@ -67,7 +67,7 @@ def turnPictureIntoVideo(picDir, audDir, dur, saveDir):
     subprocess.call(ffmpegCommand, shell=True)
 
 def deleteDirectory(directory, exclude=[]):
-    print(directory)
+    # print(directory)
     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 
     if len(exclude) >= 1:
@@ -77,26 +77,28 @@ def deleteDirectory(directory, exclude=[]):
                     files.remove(file)
 
     for file in files:
-        print(file)
+        # print(file)
         try:
             os.remove(os.path.join(directory, file))
         except:
             print(f"Could not remove {os.path.join(directory, file)}...skipping")
 
 
-def cleanUpFiles(self):
-    self.deleteDirectory(THUMBNAIL_SAVE_DIR)
-    self.deleteDirectory(FINAL_DIR)
-    self.deleteDirectory(COMMENT_MP3_DIR, ["silent075"])
-    self.deleteDirectory(COMMENT_FINAL_VIDEO_DIR)
-    self.deleteDirectory(COMMENT_FINAL_AUDIO_DIR)
-    self.deleteDirectory(COMMENT_FINAL_DIR)
-    self.deleteDirectory(COMMENT_PNG_DIR)
-    self.deleteDirectory(COMMENT_PNG_FRAME_DIR)
+def cleanUpFiles():
+    print("Cleaning files...")
 
-    self.deleteDirectory(CLIP_DIR)
-    self.deleteDirectory(CLIP_VIDEO_DIR)
-    self.deleteDirectory(CLIP_AUDIO_DIR)
+    deleteDirectory(THUMBNAIL_SAVE_DIR)
+    deleteDirectory(FINAL_DIR)
+    deleteDirectory(COMMENT_MP3_DIR, ["silent075"])
+    deleteDirectory(COMMENT_FINAL_VIDEO_DIR)
+    deleteDirectory(COMMENT_FINAL_AUDIO_DIR)
+    deleteDirectory(COMMENT_FINAL_DIR)
+    deleteDirectory(COMMENT_PNG_DIR)
+    deleteDirectory(COMMENT_PNG_FRAME_DIR)
+
+    deleteDirectory(CLIP_DIR)
+    deleteDirectory(CLIP_VIDEO_DIR)
+    deleteDirectory(CLIP_AUDIO_DIR)
 
 
 def incrementEpisodeNumber(video: VideoModel):

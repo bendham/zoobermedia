@@ -13,17 +13,17 @@ from video.VideoHandler import VideoHandler
 
 class RedditCommentVideoInterface:
 
-    def __init__(self, subIdArray, sectionsPerSub):
+    def __init__(self, video_to_make_info):
 
         self.redditInstance = praw.Reddit(client_id=reddit_id, client_secret=reddit_secret, user_agent='my user agent')
 
         self.session = Session(region_name="ca-central-1", aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
         self.polly = self.session.client("polly")
 
-        self.subIdArray = subIdArray
-        self.sectionsPerSub = sectionsPerSub
+        self.subIdArray = video_to_make_info['subreddit']
+        self.sectionsPerSub = video_to_make_info['commentSubreddits']
 
-        self.vidHandler = VideoHandler()
+        self.vidHandler = VideoHandler(video_to_make_info)
 
 
     def generateVideoList(self):

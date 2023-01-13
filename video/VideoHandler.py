@@ -17,9 +17,9 @@ from settings import *
 
 class VideoHandler:
 
-    def __init__(self):
+    def __init__(self, video_to_make_info):
         self.vidArray = []
-        self.thumbnail = Thumbnail()
+        self.thumbnail = Thumbnail(video_to_make_info['subreddit'],video_to_make_info['videoNumber'])
 
     def addVid(self, video):
 

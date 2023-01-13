@@ -11,17 +11,18 @@ class RedditVideoInterface:
     HEADERS = {'User-Agent': 'Mozilla/5.0'}
     
 
-    def __init__(self, subredditString, maxVids):
+    def __init__(self, video_to_make_info):
 
         self.redditInstance = praw.Reddit(client_id=reddit_id, client_secret=reddit_secret, user_agent='my user agent')
 
         self.url = "https://www.reddit.com"
         self.vidUrlAppear = "v.redd.it"
-        self.subredditString = subredditString
-        self.sub = self.setSub(subredditString)
+        self.subredditString = video_to_make_info['subreddit']
+        self.sub = self.setSub(video_to_make_info['subreddit'])
 
-        self.vidHandler = VideoHandler()
-        self.MAX_VIDEOS = maxVids
+        self.vidHandler = VideoHandler(video_to_make_info)
+        self.MAX_VIDEOS = video_to_make_info['numberOfClips']
+        self.video_to_make_info = video_to_make_info
 
     def setSub(self, subreddit):
        return self.redditInstance.subreddit(subreddit)
@@ -51,7 +52,7 @@ class RedditVideoInterface:
 
     def removeUnusable(self):
 
-        usableVideoHandler = VideoHandler()
+        usableVideoHandler = VideoHandler(self.video_to_make_info)
 
         for video in self.vidHandler.vidArray:
             

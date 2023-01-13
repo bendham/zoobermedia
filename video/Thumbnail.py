@@ -11,11 +11,14 @@ class Thumbnail:
 
     NUM_OF_THUMB = 5
 
-    def __init__(self):
+    def __init__(self, subString, episodeNum):
         self.FONT = "FRAHV.TTF"
         self.SIZE = (1280,720)
         self.thumbnailPathArray = []
         self.vidsForThumbnail = []
+
+        self.subString = subString
+        self.episodeNum = episodeNum
 
     def addThumbnailPath(self, possibleThumbnail):
         self.thumbnailPathArray.append(possibleThumbnail)
@@ -31,13 +34,10 @@ class Thumbnail:
 
         for idx,videoThumbnailDir in enumerate(self.thumbnailPathArray):
             if(withWord):
-                with open(UPLOAD_INFO_FILE_DIR) as uploadInfo:
-                    file = json.load(uploadInfo)
-                    currentVideo = file['video']
 
-                wordDir = os.path.join(THUMBNAIL_WORDS_DIR, file["content"][currentVideo]['meta'])
+                wordDir = os.path.join(THUMBNAIL_WORDS_DIR, self.subString)
 
-                wordDetails = {'choice':self.pickPath(wordDir),'number': file["content"][currentVideo]['number']}
+                wordDetails = {'choice':self.pickPath(wordDir),'number': self.episodeNum}
 
             if(withFace):
                 faceChoice = self.pickPath(THUMBNAIL_FACES_DIR, wordDetails)
