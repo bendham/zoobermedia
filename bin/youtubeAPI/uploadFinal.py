@@ -157,24 +157,15 @@ def resumable_upload(insert_request):
       print("Sleeping %f seconds and then retrying..." % sleep_seconds)
       time.sleep(sleep_seconds)
 
-def uploadVideo():
+def uploadVideo(video_details):
 
-  with open(UPLOAD_INFO_FILE_DIR, 'r') as vidInfoFile:
-    vidData = json.load(vidInfoFile)
-
-  curVideoType = vidData['video']
-  vidNum = str(vidData['content'][curVideoType]["number"])
-  fileName = f'{curVideoType}.txt'
+  subreddit = video_details['subreddit']
+  vidNum = str(video_details['videoNumber'])
+  fileName = f'{subreddit.lower()}.txt'
 
   # Get attributes for video
-  with open(os.path.join(YOUTUBE_API_UPLOAD_TITLE, fileName),'r') as file:
-    title = file.read().replace("?", vidNum)
-
-  with open(os.path.join(YOUTUBE_API_UPLOAD_DESC, fileName),'r') as file:
-    desc = file.readlines()
-    lineChange = desc[0].replace("?", vidNum)
-    desc[0] = lineChange
-    desc = ''.join(desc)
+  title = video_details['title'].replace("$", vidNum)
+  desc = video_details['descrption'].replace("$", vidNum)
 
   with open(os.path.join(YOUTUBE_API_UPLOAD_TAGS, fileName),'r') as file:
     tags = file.read()

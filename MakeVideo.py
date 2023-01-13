@@ -17,18 +17,21 @@ if __name__ == "__main__":
         # Will be making a video
         if video_to_make_info['iscomment']:
             # Comment Video
-            new_video_interface = RedditCommentVideoInterface(video_to_make_info['subreddit'], video_to_make_info['commentSubreddits'])
+            new_video_interface = RedditCommentVideoInterface(video_to_make_info)
 
         else:
             # Normal video (does not include twitch videos)
-            new_video_interface = RedditVideoInterface(video_to_make_info['subreddit'], video_to_make_info['numberOfClips'])
+            new_video_interface = RedditVideoInterface(video_to_make_info)
 
+        # Clean before incase there was an exception last run in the below block
         cleanUpFiles()
+
+
         new_video_interface.generateVideoList()
 
         # For now, assume the video was a success
         try:
-            uploadVideo()
+            uploadVideo(video_to_make_info)
 
             incrementEpisodeNumber(video_to_make_info)
             video_creation_data['videos'][current_day] = video_to_make_info
@@ -37,7 +40,10 @@ if __name__ == "__main__":
 
 
             updateDBData(video_creation_data)
-        except(Exception):
+            cleanUpFiles()
+
+        except Exception as exp:
             print("Could not upload!")
+            print(exp)
     
     
