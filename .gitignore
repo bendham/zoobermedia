@@ -2,6 +2,7 @@ secrets.py
 client_secrets.json
  __pycache__/
  *.pyc
+ prelim-thumbnail/
 
  # Logs
 logs
