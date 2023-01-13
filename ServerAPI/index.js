@@ -26,11 +26,15 @@ app.use(cors());
 app.use(express.json());
 app.use("/api", routes);
 
+console.log(
+  path.resolve(__dirname, "..") +
+    "\\video\\video-content\\thumbnail\\prelim-thumbnail"
+);
 app.use(
   "/images",
   express.static(
     path.resolve(__dirname, "..") +
-      "zoobermedia/video/video-content/thumbnail/prelim-thumbnail"
+      "\\video\\video-content\\thumbnail\\prelim-thumbnail"
   )
 );
 
