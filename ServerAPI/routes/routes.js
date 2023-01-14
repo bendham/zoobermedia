@@ -90,6 +90,15 @@ router.get("/getAll", async (req, res) => {
   }
 });
 
+//Get all Method
+router.get("/", async (req, res) => {
+  try {
+    res.json("API works :)");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // // Get images
 // router.get("/getImages", async (req, res) => {
 //   try {
