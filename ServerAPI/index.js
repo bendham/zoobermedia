@@ -29,13 +29,13 @@ app.use("/", routes);
 
 console.log(
   path.resolve(__dirname, "..") +
-    "\\video\\video-content\\thumbnail\\prelim-thumbnail"
+    "/video/video-content/thumbnail/prelim-thumbnail"
 );
 app.use(
   "/images",
   express.static(
     path.resolve(__dirname, "..") +
-      "\\video\\video-content\\thumbnail\\prelim-thumbnail"
+      "/video/video-content/thumbnail/prelim-thumbnail"
   )
 );
 
