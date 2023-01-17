@@ -3,6 +3,7 @@ client_secrets.json
  __pycache__/
  *.pyc
  prelim-thumbnail/
+ funny_moments.mp4
 
  # Logs
 logs
