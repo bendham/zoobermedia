@@ -21,7 +21,7 @@ def updateDBData(data):
     db['datas'].replace_one({'zooberType': 'main'}, data)
 
 def updateThumbnailArrayLinks(data):
-    urlString = "http://localhost:3000/images/"
+    urlString = ZOOBER_API_URL+"/images/"
 
     images = [f for f in os.listdir(THUMBNAIL_SAVE_DIR) if os.path.isfile(os.path.join(THUMBNAIL_SAVE_DIR, f))]
 

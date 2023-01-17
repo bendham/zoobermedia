@@ -21,6 +21,7 @@ THUMBNAIL_SAVE_DIR = os.path.join(THUMBNAIL_DIR, "prelim-thumbnail")
 THUMBNAIL_WORDS_DIR = os.path.join(THUMBNAIL_DIR, "word")
 THUMBNAIL_FACES_DIR = os.path.join(THUMBNAIL_DIR, "face")
 
+ZOOBER_API_URL =  "https://api.zoobermedia.com"
 DEFAULT_THUMBNAIL_FOR_CLIENT = "https://www.readersdigest.ca/wp-content/uploads/2017/10/funny-photos-llama.jpg"
 
 ZOOBER_CONTENT_DIR = os.path.join(VIDEO_CONTENT_DIR, 'zoober-content')
