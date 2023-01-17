@@ -1,4 +1,6 @@
 const express = require("express");
+const { spawn } = require("child_process");
+const path = require("path");
 // const Model = require("../models/model");
 const router = express.Router();
 
@@ -131,6 +133,32 @@ router.patch("/update", async (req, res) => {
     );
 
     res.send(result);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.post("/makevideo", async (req, res) => {
+  try {
+    // const updatedData = req.body;
+    // const options = { new: true };
+    console.log("Making video!");
+    const python = spawn("python", [
+      path.resolve(__dirname, "..", "..", "MakeVideo.py"),
+      JSON.stringify(req.body),
+    ]);
+
+    python.stdout.on("data", function (data) {
+      console.log(data.toString());
+    });
+
+    python.stderr.on("data", function (data) {
+      console.error(data.toString());
+    });
+
+    res.status(200).json({ message: "video being made made!" });
+
+    // res.send(req.body);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

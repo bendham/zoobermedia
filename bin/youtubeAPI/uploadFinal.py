@@ -14,7 +14,7 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import argparser, run_flow
 
-from settings import FINAL_SAVE, UPLOAD_INFO_FILE_DIR, YOUTUBE_API_UPLOAD_DESC, YOUTUBE_API_UPLOAD_TAGS, YOUTUBE_API_UPLOAD_TITLE, YOUTUBE_API
+from settings import FINAL_SAVE, UPLOAD_INFO_FILE_DIR, YOUTUBE_API_UPLOAD_DESC, YOUTUBE_API_UPLOAD_TAGS, YOUTUBE_API_UPLOAD_TITLE, YOUTUBE_API, OATH_FILE
 
 
 # Explicitly tell the underlying HTTP transport library not to retry, since
@@ -76,7 +76,7 @@ def get_authenticated_service(args):
     scope=YOUTUBE_UPLOAD_SCOPE,
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 
-  storage = Storage("%s-oauth2.json" % sys.argv[0])
+  storage = Storage(OATH_FILE)
   credentials = storage.get()
 
   if credentials is None or credentials.invalid:
@@ -169,6 +169,10 @@ def uploadVideo(video_details):
 
   with open(os.path.join(YOUTUBE_API_UPLOAD_TAGS, fileName),'r') as file:
     tags = file.read()
+
+  # If video is a one off, then adjust the arguments so it doesnt fail when reading with arg parser
+  if(len(sys.argv) >= 2):
+    sys.argv.pop(1)
 
   argparser.add_argument("--file", help="Video file to upload", default=FINAL_SAVE)
   argparser.add_argument("--title", help="Video title", default=title)

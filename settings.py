@@ -31,6 +31,7 @@ WATERMARK_FILE_DIR = os.path.join(ZOOBER_CONTENT_DIR, 'watermark.png')
 UPLOAD_INFO_FILE_DIR = os.path.join(BIN_DIR, 'upload_info.json')
 
 YOUTUBE_API = os.path.join(BIN_DIR, 'youtubeAPI', 'video')
+OATH_FILE = os.path.join(BIN_DIR, "upload_oauth2.json")
 
 YOUTUBE_API_UPLOAD_DESC = os.path.join(YOUTUBE_API,"description")
 YOUTUBE_API_UPLOAD_TAGS = os.path.join(YOUTUBE_API,"tags")
