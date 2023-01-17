@@ -22,7 +22,7 @@ database.once("connected", () => {
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 
 // Add headers before the routes are defined
