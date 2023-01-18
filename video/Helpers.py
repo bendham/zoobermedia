@@ -68,21 +68,22 @@ def turnPictureIntoVideo(picDir, audDir, dur, saveDir):
 
 def deleteDirectory(directory, exclude=[]):
     # print(directory)
-    files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+    if(os.listdir(directory) >= 1):
+        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 
-    if len(files) >= 1:
-        if len(exclude) >= 1:
-            for exc in exclude:
-                for file in files:
-                    if exc in file:
-                        files.remove(file)
+        if len(files) >= 1:
+            if len(exclude) >= 1:
+                for exc in exclude:
+                    for file in files:
+                        if exc in file:
+                            files.remove(file)
 
-        for file in files:
-            # print(file)
-            try:
-                os.remove(os.path.join(directory, file))
-            except:
-                print(f"Could not remove {os.path.join(directory, file)}...skipping")
+            for file in files:
+                # print(file)
+                try:
+                    os.remove(os.path.join(directory, file))
+                except:
+                    print(f"Could not remove {os.path.join(directory, file)}...skipping")
 
 
 def cleanUpFiles():
