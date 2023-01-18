@@ -143,7 +143,7 @@ router.post("/makevideo", async (req, res) => {
     // const updatedData = req.body;
     // const options = { new: true };
     console.log("Making video!");
-    const python = spawn("python", [
+    const python = spawn("python3", [
       path.resolve(__dirname, "..", "..", "MakeVideo.py"),
       JSON.stringify(req.body),
     ]);
