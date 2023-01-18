@@ -21,6 +21,7 @@ if __name__ == "__main__":
 
         current_day = readDay(video_creation_data)
         video_to_make_info = video_creation_data['videos'][current_day]
+
     if video_to_make_info['isMakingVideo']:
         # Will be making a video
         if video_to_make_info['iscomment']:
@@ -55,5 +56,10 @@ if __name__ == "__main__":
             print("Could not upload!")
             print(exp)
             cleanUpFiles()
+    else:
+        if(isScheduledVideo):
+            video_creation_data = getDBData()
+            addDay(video_creation_data)
+            updateDBData(video_creation_data)
     
     
