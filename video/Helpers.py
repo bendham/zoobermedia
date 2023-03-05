@@ -13,6 +13,7 @@ def getDBData():
     client: MongoClient = MongoClient(mongo_string)
 
     db = client['zoobermedia']
+    print(db)
     return db['datas'].find_one()
 
 def updateDBData(data):
@@ -107,6 +108,9 @@ def readDay(video_data):
     return video_data['currentDay']
 
 def addDay(video_data):
-    video_data['currentDay'] += 1
+    if video_data['currentDay'] == 6:
+        video_data['currentDay'] = 0
+    else:
+        video_data['currentDay'] += 1
 
 
