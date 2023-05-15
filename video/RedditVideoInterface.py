@@ -35,6 +35,12 @@ class RedditVideoInterface:
         self.getThumbnail()
         self.concat()
 
+    def generateThumbnailList(self):
+        self.populateList()
+        self.removeUnusable()
+        self.processVideos()
+        self.getThumbnail()
+
     def populateList(self):
         vidNumber = 1
 
