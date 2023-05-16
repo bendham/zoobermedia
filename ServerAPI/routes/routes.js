@@ -164,6 +164,32 @@ router.post("/makevideo", async (req, res) => {
   }
 });
 
+router.post("/makethumbnail", async (req, res) => {
+  try {
+    // const updatedData = req.body;
+    // const options = { new: true };
+    console.log("Making thumbnails!");
+    const python = spawn("python3", [
+      path.resolve(__dirname, "..", "..", "ThumbnailGenerator.py"),
+      JSON.stringify(req.body),
+    ]);
+
+    python.stdout.on("data", function (data) {
+      console.log(data.toString());
+    });
+
+    python.stderr.on("data", function (data) {
+      console.error(data.toString());
+    });
+
+    res.status(200).json({ message: "thumbnails are being made!" });
+
+    // res.send(req.body);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 //Delete by ID Method
 router.delete("/delete/:id", async (req, res) => {
   try {

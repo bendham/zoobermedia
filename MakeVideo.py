@@ -43,8 +43,7 @@ if __name__ == "__main__":
             uploadVideo(video_to_make_info)
 
             if(isScheduledVideo):
-                incrementEpisodeNumber(video_to_make_info)
-                video_creation_data['videos'][current_day] = video_to_make_info
+                incrementEpisodeNumber(video_creation_data, video_to_make_info)
                 addDay(video_creation_data)
                 updateThumbnailArrayLinks(video_creation_data)
 

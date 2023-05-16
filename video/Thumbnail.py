@@ -9,9 +9,9 @@ from settings import *
 
 class Thumbnail:
 
-    NUM_OF_THUMB = 5
+    
 
-    def __init__(self, subString, episodeNum):
+    def __init__(self, subString, episodeNum, num_thumb=5):
         self.FONT = "FRAHV.TTF"
         self.SIZE = (1280,720)
         self.thumbnailPathArray = []
@@ -19,6 +19,9 @@ class Thumbnail:
 
         self.subString = subString
         self.episodeNum = episodeNum
+
+        self.thumbnail_compare_size = 0
+        self.num_thumb = num_thumb
 
     def addThumbnailPath(self, possibleThumbnail):
         self.thumbnailPathArray.append(possibleThumbnail)
@@ -111,9 +114,9 @@ class Thumbnail:
     def checkCandidateForThumbnail(self, vidFileDir):
         numberOfThumbnails = len(self.thumbnailPathArray)
 
-        if(numberOfThumbnails < self.NUM_OF_THUMB):
+        if(numberOfThumbnails < self.num_thumb):
             vid =  VideoFileClip(vidFileDir)
-            if vid.h * vid.w >= 720*1080:
+            if vid.h * vid.w >= 720*480:
                 self.vidsForThumbnail.append(vidFileDir)
             vid.close()
 

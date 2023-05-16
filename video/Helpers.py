@@ -69,20 +69,24 @@ def turnPictureIntoVideo(picDir, audDir, dur, saveDir):
 
 def deleteDirectory(directory, exclude=[]):
     # print(directory)
-    files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+
+    if os.path.isdir(directory):
+        files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
 
 
-    for exc in exclude:
+        for exc in exclude:
+            for file in files:
+                if exc in file:
+                    files.remove(file)
+
         for file in files:
-            if exc in file:
-                files.remove(file)
-
-    for file in files:
-        # print(file)
-        try:
-            os.remove(os.path.join(directory, file))
-        except:
-            print(f"Could not remove {os.path.join(directory, file)}...skipping")
+            # print(file)
+            try:
+                os.remove(os.path.join(directory, file))
+            except:
+                print(f"Could not remove {os.path.join(directory, file)}...skipping")
+    else:
+        print(f"'{directory}' is not a valid directory to delete...skipping!")
 
 
 def cleanUpFiles():
@@ -101,8 +105,12 @@ def cleanUpFiles():
     deleteDirectory(CLIP_AUDIO_DIR)
 
 
-def incrementEpisodeNumber(video: VideoModel):
-    video['videoNumber'] += 1
+def incrementEpisodeNumber(video_db, video: VideoModel):
+    for vid, idx in enumerate(video_db['videos']):
+        if vid['subreddit'] == video['subreddit']:
+            video_db['videos'][idx]['videoNumber'] += 1
+
+    
 
 def readDay(video_data):
     return video_data['currentDay']

@@ -107,7 +107,7 @@ class RedditVideoInterface:
         print(f"Processing video #{vid.vidNum}...\n")
 
         sizeVideo = os.stat(vid.videoFileDir).st_size
-        if(sizeVideo > 1000):
+        if(sizeVideo > 1000): # Filters out dud videos
             self.vidHandler.thumbnail.checkCandidateForThumbnail(vid.videoFileDir)
 
             # Normalize Audio
@@ -117,6 +117,7 @@ class RedditVideoInterface:
             subprocess.call(f'ffmpeg -hide_banner -loglevel error -i {vid.videoFileDir} -i {vid.normAudioFileDir} -i {WATERMARK_FILE_DIR} -filter_complex "[0]scale=1280:720,setsar=1:1,boxblur=10[bg];[0]scale=-1:720,setsar=16:9[main];[bg][main]overlay=(W-w)/2:(H-h)/2[markit];[markit][2] overlay" {vid.combinedFileDir}', shell=True)
 
             self.vidHandler.removeFile([vid.videoFileDir, vid.audioFileDir, vid.normAudioFileDir])
+
         else:
             self.vidHandler.removeFile([vid.videoFileDir, vid.audioFileDir])
             print(f"Video #{vid.vidNum} was too small...")
