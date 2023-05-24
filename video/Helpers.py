@@ -106,9 +106,11 @@ def cleanUpFiles():
 
 
 def incrementEpisodeNumber(video_db, video: VideoModel):
-    for vid, idx in enumerate(video_db['videos']):
-        if vid['subreddit'] == video['subreddit']:
-            video_db['videos'][idx]['videoNumber'] += 1
+    # video_list = video_db['videos']
+    # print(video_list)
+    for day_of_week in range(0, 7):
+        if video_db['videos'][day_of_week]['subreddit'] == video['subreddit'] and video_db['videos'][day_of_week]['isMakingVideo'] == True:
+            video_db['videos'][day_of_week]['videoNumber'] += 1
 
     
 

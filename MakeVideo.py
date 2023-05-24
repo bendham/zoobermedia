@@ -36,11 +36,11 @@ if __name__ == "__main__":
         deleteDirectory(THUMBNAIL_SAVE_DIR)
 
 
-        new_video_interface.generateVideoList()
+        # new_video_interface.generateVideoList()
 
         # For now, assume the video was a success
         try:
-            uploadVideo(video_to_make_info)
+            # uploadVideo(video_to_make_info)
 
             if(isScheduledVideo):
                 incrementEpisodeNumber(video_creation_data, video_to_make_info)
