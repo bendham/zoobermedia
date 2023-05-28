@@ -16,10 +16,10 @@ if __name__ == "__main__":
     deleteDirectory(THUMBNAIL_SAVE_DIR)
 
     # Require sub name, episode number, and how many thumbnails are required!
-    video_to_make_info = json.loads(sys.argv[1].replace("'", '"'))
+    # video_to_make_info = json.loads(sys.argv[1].replace("'", '"'))
 
     # Get videos
-    # video_to_make_info = {"subreddit": "contagiouslaughter", "numberOfClips" : 30, 'videoNumber': 2}
+    video_to_make_info = {"subreddit": "contagiouslaughter", "numberOfClips" : 10, 'videoNumber': 2}
     video_finder = RedditVideoInterface(video_to_make_info)
 
     # Make thumbnails from them

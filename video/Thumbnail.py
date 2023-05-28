@@ -130,7 +130,7 @@ class Thumbnail:
 
             vid =  VideoFileClip(vidDir)
             
-            if vid.h * vid.w >= 720*1080:
+            if vid.h * vid.w >= 720*480:
 
                 intVidDuration = math.floor(vid.duration)
                 
